@@ -392,7 +392,7 @@ void aes_128_expand_key(aes_128_expanded_key_t expanded_key, aes_128_key_t key) 
 	}
 }
 
-void aes_round(aes_state_t state, uint8_t *round_key) {
+void aes_round(aes_state_t state, uint8_t* round_key) {
 	sub_bytes(state);
 	shift_rows(state);
 	mix_columns(state);
@@ -444,11 +444,14 @@ void aes_inv_main(aes_state_t state, uint8_t* expanded_key, uint8_t nr) {
 	add_round_key(state, round_key);
 }
 
-void aes_decrypt(uint8_t* input, uint8_t* output, uint8_t* key, uint8_t key_size) {
+void aes_128_decrypt_block(aes_128_block_t input, aes_128_block_t output, aes_128_key_t key) {
 	// we cannot malloc, so we need to use a fixed size array, and therefore
 	// we are defensize by using the maximum key size
-	uint8_t expanded_key[240]; // 240 = 15 * 16 -- the max size of the expanded key
-	uint8_t nr_rounds; // number of rounds
+	// uint8_t expanded_key[240]; // 240 = 15 * 16 -- the max size of the expanded key
+	
+	aes_128_expanded_key_t expanded_key = { 0 };
+
+	const uint8_t nr_rounds = 10; // number of rounds for 128 bit keys
 
 	// expand the key
 	// nr_rounds = aes_128_expand_key(expanded_key, key);
@@ -457,7 +460,7 @@ void aes_decrypt(uint8_t* input, uint8_t* output, uint8_t* key, uint8_t key_size
 	// copy the input to the output
 	// this avoids overwriting the input data
 	// while encrypting
-	memcpy(output, input, 16);
+	// memcpy(output, input, 16);
 
 	uint8_t block[16];
 	// set the block values, for the block we are going to decrypt
@@ -472,18 +475,17 @@ void aes_decrypt(uint8_t* input, uint8_t* output, uint8_t* key, uint8_t key_size
 		// iterate over the rows
 		for (uint8_t j = 0; j < 4; j++) {
 			// set the block value
-			block[(i + (j * 4))] = output[(i * 4) + j];
+			block[(i + (j * 4))] = input[(i * 4) + j];
 		}
 	}
 
-	// expand the key into an 176, 208, 240 bytes key
-	// aes_expand_key()
+	aes_128_expand_key(expanded_key, key);
+
 
 	// decrypt the 16 byte input block
 	aes_inv_main(block, expanded_key, nr_rounds);
 
 	// unmap the block values back into the output
-	
 	for (uint8_t i = 0; i < 4; i++) {
 		for (uint8_t j = 0; j < 4; j++) {
 			output[(i * 4) + j] = block[(i + (j * 4))];
@@ -493,7 +495,7 @@ void aes_decrypt(uint8_t* input, uint8_t* output, uint8_t* key, uint8_t key_size
 
 
 
-void aes_main(aes_state_t state, uint8_t *expanded_key, uint8_t nr) {
+void aes_main(aes_state_t state, aes_128_expanded_key_t expanded_key, uint8_t nr) {
 	uint8_t round_key[16];
 
 	// add the initial round key to the state before starting the rounds
@@ -516,39 +518,42 @@ void aes_main(aes_state_t state, uint8_t *expanded_key, uint8_t nr) {
 	add_round_key(state, round_key);
 }
 
-// void aes_encrypt(uint8_t* input, uint8_t* output, uint8_t* key, uint8_t key_size) {
-// 	uint8_t expanded_key[240];
-// 	uint8_t nr_rounds;
+// NOTE: this does the encryption in place
+void aes_128_encrypt_block(uint8_t *input_block, uint8_t *output_block, uint8_t *key) {
+	const uint8_t expanded_key_size = 176;
+	uint8_t expanded_key[expanded_key_size];
+	uint8_t nr_rounds = 10; // 10 for a key of 128 bits
 
-// 	switch (key_size) {
-// 		case 16:
-// 			nr_rounds = 10;
-// 			break;
-// 		case 24:
-// 			nr_rounds = 12;
-// 			break;
-// 		case 32:
-// 			nr_rounds = 14;
-// 			break;
-// 		default:
-// 			// error
-// 			return;
-// 	}
+	aes_128_block_t block; // the block we are going to encrypt
+	
+	// set the block values, for the block we are going to encrypt
+	// a(0,0) a(0,1) a(0,2) a(0,3)
+	// a(1,0) a(1,1) a(1,2) a(1,3)
+	// a(2,0) a(2,1) a(2,2) a(2,3)
+	// a(3,0) a(3,1) a(3,2) a(3,3)
+	// the mapping order is column major
+	
+	// iterate over the columns
+	for (uint8_t i = 0; i < 4; i++) {
+		// iterate over the rows
+		for (uint8_t j = 0; j < 4; j++) {
+			// set the block value
+			block[(i + (j * 4))] = input_block[(i * 4) + j];
+		}
+	}
 
-// 	// expand the key into an 240 byte key
-// 	// the expanded key is needed during encryption
-// 	key_expansion(key, expanded_key, key_size, &nr);
+	aes_128_expand_key(expanded_key, key);
 
-// 	// the actual encryption
-// 	aes_main(input, expanded_key, nr);
+	// encrypt the 16 byte input block using the expanded key
+	aes_main(block, expanded_key, nr_rounds);
 
-// 	// the encryption output is here put into the output uint8_t array
-// 	// the output uint8_t array must be 16 bytes long
-// 	// this can be assured by passing &output in the parameter
-// 	for (uint8_t i = 0; i < 16; ++i) {
-// 		output[i] = input[i];
-// 	}
-// }
+	// unmap the block values back into the output
+	for (uint8_t i = 0; i < 4; i++) {
+		for (uint8_t j = 0; j < 4; j++) {
+			output_block[(i * 4) + j] = block[(i + (j * 4))];
+		}
+	}
+}
 
 
 // void aes_128_ecb_encrypt(uint8_t *key, uint8_t *data, size_t data_len) {

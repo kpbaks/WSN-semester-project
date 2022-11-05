@@ -110,55 +110,85 @@ int main(int argc, char **argv) {
 	};
     // clang-format on
 
-	printf("\nexpanded key next to expected\n");
-	// print each byte of expanded key next to expected_expanded_key in an 16x11 grid
-	for (int i = 0; i < 176; i++) {
-	  printf("%02x ", expanded_key[i]);
-	  if (i % 16 == 15) {
-		printf("\t");
-		for (int j = i - 15; j <= i; j++) {
-		  printf("%02x ", expected_expanded_key[j]);
-		}
-		printf("\n");
-	  }
-	}
-	
+    printf("\nexpanded key next to expected\n");
+    // print each byte of expanded key next to expected_expanded_key in an 16x11
+    // grid
+    for (int i = 0; i < 176; i++) {
+      printf("%02x ", expanded_key[i]);
+      if (i % 16 == 15) {
+        printf("\t");
+        for (int j = i - 15; j <= i; j++) {
+          printf("%02x ", expected_expanded_key[j]);
+        }
+        printf("\n");
+      }
+    }
 
     assert(memcmp(expanded_key, expected_expanded_key,
                   sizeof(expected_expanded_key)) == 0);
   }
 
-
   // test encrypt and decryption
   // clang-format off
-  // {
-  // uint8_t key[16] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-  //                    0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
+  {
+  const uint8_t key[16] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+                     0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
 
-  // uint8_t cleartext[16] = "my name is jeff";
+  const uint8_t cleartext[16] = "my name is jeff";
 
-  //   aes_128_block_t ciphertext;
-  //   aes_128_encrypt_block(cleartext, ciphertext, key);
+		printf("\nbefore encrypt\n");
+		printf("cleartext: %s\n", cleartext);
 
-  //   // print ciphertext
-  //   for (int i = 0; i < 16; i++) {
-  //     printf("%02x ", ciphertext[i]);
-  //   }
-  //   printf("\n");
+	printf("cleartext (hex):\t");
+    for (int i = 0; i < 16; i++) {
+      printf("0x%02x ", cleartext[i]);
+    }
+    printf("\n");
 
-  //   // decrypt
-  //   aes_128_block_t decrypted;
-  //   aes_128_decrypt_block(ciphertext, decrypted, key);
+    aes_128_block_t ciphertext = {0};
+    aes_128_encrypt_block(cleartext, ciphertext, key);
 
-  //   // print decrypted
-  //   for (int i = 0; i < 16; i++) {
-  //     printf("%02x ", decrypted[i]);
-  //   }
+    // print ciphertext
+	printf("ciphertext (hex):\t");
+    for (int i = 0; i < 16; i++) {
+      printf("0x%02x ", ciphertext[i]);
+    }
+    printf("\n");
 
-  //   // compare decrypted to cleartext
-  //   assert(memcmp(decrypted, cleartext, sizeof(decrypted)) == 0);
-  //   printf("\naes_decrypt test passed\n");
-  // }
+    // decrypt
+    aes_128_block_t decrypted;
+    aes_128_decrypt_block(ciphertext, decrypted, key);
+
+    // print decrypted
+	printf("decrypted (hex):\t");
+    for (int i = 0; i < 16; i++) {
+      printf("0x%02x ", decrypted[i]);
+    }
+			printf("\n");
+
+    // compare decrypted to cleartext
+    assert(memcmp(decrypted, cleartext, sizeof(decrypted)) == 0);
+
+// print sizeof ciphertext
+		//
+// FIX: then \0 byte gets discarded so that is why printf will print 31 chars when printing ciphertext
+		ciphertext[16] = '\0'; // this cuts off the last byte of ciphertext, which is wrong
+	printf("sizeof ciphertext: %lu\n", sizeof(ciphertext));
+	printf("sizeof decrypted: %lu\n", sizeof(decrypted));
+	printf("sizeof cleartext: %lu\n", sizeof(cleartext));
+
+    // clang-format on
+
+    // write ciphertext to file
+    FILE *fp;
+    fp = fopen("ciphertext.txt", "w");
+    fprintf(fp, "%s", ciphertext);
+    fclose(fp);
+
+    printf("\nciphertext (text):\t%16s\n", ciphertext);
+    printf("decrypted (text):\t%s\n", decrypted);
+    printf("\naes_decrypt test passed\n");
+  }
 
   return 0;
 }

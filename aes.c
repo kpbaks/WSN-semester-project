@@ -152,8 +152,6 @@ void core(uint8_t *word, uint8_t iteration) {
 //   }
 // }
 
-
-
 // The cipher key is expanded into a larger key, which is later used for the
 // actual encryption.
 // -----------------------------    -----------------------------
@@ -163,152 +161,152 @@ void core(uint8_t *word, uint8_t iteration) {
 // | a3,0 | a3,1 | a3,2 | a3,3 |    | a3,3 | a3,0 | a3,1 | a3,2 |
 // -----------------------------    -----------------------------
 void shift_rows(aes_state_t state) {
-	uint8_t tmp;
+  uint8_t tmp;
 
-	tmp = state[4]; // state(1,0)
-	state[4] = state[5]; // state(1,1)
-	state[5] = state[6]; // state(1,2)
-	state[6] = state[7]; // state(1,3)
-	state[7] = tmp; // state(1,0)
-	
-	// index = 4 * row + column - 1
-	tmp = state[8]; // state(2,0)
-	state[8] = state[10]; // state(2,2)
-	state[10] = tmp; // state(2,0)
-	tmp = state[9]; // state(2,1)
-	state[9] = state[11]; // state(2,3)
-	state[11] = tmp; // state(2,1)
-	
-	tmp = state[12]; // state(3,0)
-	state[12] = state[15]; // state(3,3)
-	state[15] = state[14]; // state(3,2)
-	state[14] = state[13]; // state(3,1)
-	state[13] = tmp; // state(3,0)
+  tmp = state[4];      // state(1,0)
+  state[4] = state[5]; // state(1,1)
+  state[5] = state[6]; // state(1,2)
+  state[6] = state[7]; // state(1,3)
+  state[7] = tmp;      // state(1,0)
+
+  // index = 4 * row + column - 1
+  tmp = state[8];       // state(2,0)
+  state[8] = state[10]; // state(2,2)
+  state[10] = tmp;      // state(2,0)
+  tmp = state[9];       // state(2,1)
+  state[9] = state[11]; // state(2,3)
+  state[11] = tmp;      // state(2,1)
+
+  tmp = state[12];       // state(3,0)
+  state[12] = state[15]; // state(3,3)
+  state[15] = state[14]; // state(3,2)
+  state[14] = state[13]; // state(3,1)
+  state[13] = tmp;       // state(3,0)
 }
 
 void add_round_key(aes_state_t state, aes_128_key_t round_key) {
-	for (uint8_t i = 0; i < 16; i++) {
-		state[i] ^= round_key[i];
-	}
+  for (uint8_t i = 0; i < 16; i++) {
+    state[i] ^= round_key[i];
+  }
 }
 
+uint8_t galois_mul2(uint8_t a, uint8_t b) {
+  uint8_t p = 0;
+  uint8_t hi_bit_set;
+  for (uint8_t counter = 0; counter < 8; counter++) {
+    if ((b & 1) == 1) {
+      p ^= a;
+    }
+    hi_bit_set = (a & 0x80);
+    a <<= 1;
+    if (hi_bit_set == 0x80) {
+      a ^= 0x1b; /* x^8 + x^4 + x^3 + x + 1 */
+    }
+    b >>= 1;
+  }
 
-uint8_t galois_mul2(uint8_t a, uint8_t b)  {
-	uint8_t p = 0;
-	uint8_t hi_bit_set;
-	for (uint8_t counter = 0; counter < 8; counter++) {
-		if ((b & 1) == 1) {
-			p ^= a;
-		}
-		hi_bit_set = (a & 0x80);
-		a <<= 1;
-		if (hi_bit_set == 0x80) {
-			a ^= 0x1b; /* x^8 + x^4 + x^3 + x + 1 */
-		}
-		b >>= 1;
-	}
-
-	return p;
+  return p;
 }
 
-void mix_column(uint8_t* column) {
-	uint8_t cpy[4];
+void mix_column(uint8_t *column) {
+  uint8_t cpy[4];
 
-	// PERF: use memcpy
-	// memcpy(cpy, column, 4);
+  // PERF: use memcpy
+  // memcpy(cpy, column, 4);
 
-	for (uint8_t i = 0; i < 4; i++) {
-		cpy[i] = column[i];
-	}
+  for (uint8_t i = 0; i < 4; i++) {
+    cpy[i] = column[i];
+  }
 
-	column[0] = galois_mul2(cpy[0], 2) ^ galois_mul2(cpy[3], 1) ^ galois_mul2(cpy[2], 1) ^ galois_mul2(cpy[1], 3);
-	column[1] = galois_mul2(cpy[1], 2) ^ galois_mul2(cpy[0], 1) ^ galois_mul2(cpy[3], 1) ^ galois_mul2(cpy[2], 3);
-	column[2] = galois_mul2(cpy[2], 2) ^ galois_mul2(cpy[1], 1) ^ galois_mul2(cpy[0], 1) ^ galois_mul2(cpy[3], 3);
-	column[3] = galois_mul2(cpy[3], 2) ^ galois_mul2(cpy[2], 1) ^ galois_mul2(cpy[1], 1) ^ galois_mul2(cpy[0], 3);
+  column[0] = galois_mul2(cpy[0], 2) ^ galois_mul2(cpy[3], 1) ^
+              galois_mul2(cpy[2], 1) ^ galois_mul2(cpy[1], 3);
+  column[1] = galois_mul2(cpy[1], 2) ^ galois_mul2(cpy[0], 1) ^
+              galois_mul2(cpy[3], 1) ^ galois_mul2(cpy[2], 3);
+  column[2] = galois_mul2(cpy[2], 2) ^ galois_mul2(cpy[1], 1) ^
+              galois_mul2(cpy[0], 1) ^ galois_mul2(cpy[3], 3);
+  column[3] = galois_mul2(cpy[3], 2) ^ galois_mul2(cpy[2], 1) ^
+              galois_mul2(cpy[1], 1) ^ galois_mul2(cpy[0], 3);
 }
 
-void mix_columns(aes_state_t state){
-	uint8_t column[4];
+void mix_columns(aes_state_t state) {
+  uint8_t column[4];
 
-	// iterate over the 4 columns
-	for (uint8_t i = 0; i < 4; i++) {
-		// construct one column by iterating over the 4 rows
-		for (uint8_t j = 0; j < 4; j++) {
-			// column[j] = state[(i * 4) + j];
-			column[j] = state[(j * 4) + i];
-		}
-		// apply the mix_column on one column
-		mix_column(column);
-		// put the values back into the state
-		for (uint8_t j = 0; j < 4; j++) {
-			// state[(i * 4) + j] = column[j];
-			state[(j * 4) + i] = column[j];
-		}
-	}
-	
+  // iterate over the 4 columns
+  for (uint8_t i = 0; i < 4; i++) {
+    // construct one column by iterating over the 4 rows
+    for (uint8_t j = 0; j < 4; j++) {
+      // column[j] = state[(i * 4) + j];
+      column[j] = state[(j * 4) + i];
+    }
+    // apply the mix_column on one column
+    mix_column(column);
+    // put the values back into the state
+    for (uint8_t j = 0; j < 4; j++) {
+      // state[(i * 4) + j] = column[j];
+      state[(j * 4) + i] = column[j];
+    }
+  }
 }
-
-
 
 void sub_bytes(aes_state_t state) {
-	// substitute all the value from the state with the value in the sbox
-	// using the state value as index for the sbox
-	for (uint8_t i = 0; i < 16; ++i) {
-		state[i] = get_sbox_value(state[i]);
-	}
+  // substitute all the value from the state with the value in the sbox
+  // using the state value as index for the sbox
+  for (uint8_t i = 0; i < 16; ++i) {
+    state[i] = get_sbox_value(state[i]);
+  }
 }
 
 void inv_sub_bytes(aes_state_t state) {
-	// substitute all the value from the state with the value in the sbox
-	// using the state value as index for the sbox
-	for (uint8_t i = 0; i < 16; ++i) {
-		state[i] = get_rsbox_value(state[i]);
-	}
+  // substitute all the value from the state with the value in the sbox
+  // using the state value as index for the sbox
+  for (uint8_t i = 0; i < 16; ++i) {
+    state[i] = get_rsbox_value(state[i]);
+  }
 }
 
 void inv_shift_rows(aes_state_t state) {
-	uint8_t tmp;
-	// (0,0) -> 0
-	// (0,1) -> 1
-	// (0,2) -> 2
-	// (0,3) -> 3
-	// (1,0) -> 4
-	// (1,1) -> 5
-	// (1,2) -> 6
-	// (1,3) -> 7
-	// (2,0) -> 8
-	// (2,1) -> 9
-	// (2,2) -> 10
-	// (2,3) -> 11
-	// (3,0) -> 12
-	// (3,1) -> 13
-	// (3,2) -> 14
-	// (3,3) -> 15
-	// index = 4 * row + column - 1
-	
-	// { 4, 5, 6, 7 } -> { 7, 4, 5, 6 } shift right 1
-	// { 7, 4, 5, 6 } -> { 4, 5, 6, 7 }	shift left 1
-	// 1st row 
-	tmp = state[7]; // state(1,3)
-	state[7] = state[6]; // state(1,2)
-	state[6] = state[5]; // state(1,1)
-	state[5] = state[4]; // state(1,0)
-	state[4] = tmp; // state(1,3)
-	
-	// 2nd row
-	tmp = state[8]; // state(2,0)
-	state[8] = state[10]; // state(2,2)
-	state[10] = tmp; // state(2,0)
-	tmp = state[9]; // state(2,1)
-	state[9] = state[11]; // state(2,3)
-	state[11] = tmp; // state(2,1)
-	
-	// 3rd row
-	tmp = state[12]; // state(3,0)
-	state[12] = state[13]; // state(3,1)
-	state[13] = state[14]; // state(3,2)
-	state[14] = state[15]; // state(3,3)
-	state[15] = tmp; // state(3,0)
+  uint8_t tmp;
+  // (0,0) -> 0
+  // (0,1) -> 1
+  // (0,2) -> 2
+  // (0,3) -> 3
+  // (1,0) -> 4
+  // (1,1) -> 5
+  // (1,2) -> 6
+  // (1,3) -> 7
+  // (2,0) -> 8
+  // (2,1) -> 9
+  // (2,2) -> 10
+  // (2,3) -> 11
+  // (3,0) -> 12
+  // (3,1) -> 13
+  // (3,2) -> 14
+  // (3,3) -> 15
+  // index = 4 * row + column - 1
+
+  // { 4, 5, 6, 7 } -> { 7, 4, 5, 6 } shift right 1
+  // { 7, 4, 5, 6 } -> { 4, 5, 6, 7 }	shift left 1
+  // 1st row
+  tmp = state[7];      // state(1,3)
+  state[7] = state[6]; // state(1,2)
+  state[6] = state[5]; // state(1,1)
+  state[5] = state[4]; // state(1,0)
+  state[4] = tmp;      // state(1,3)
+
+  // 2nd row
+  tmp = state[8];       // state(2,0)
+  state[8] = state[10]; // state(2,2)
+  state[10] = tmp;      // state(2,0)
+  tmp = state[9];       // state(2,1)
+  state[9] = state[11]; // state(2,3)
+  state[11] = tmp;      // state(2,1)
+
+  // 3rd row
+  tmp = state[12];       // state(3,0)
+  state[12] = state[13]; // state(3,1)
+  state[13] = state[14]; // state(3,2)
+  state[14] = state[15]; // state(3,3)
+  state[15] = tmp;       // state(3,0)
 }
 
 // the multiplication matrix
@@ -317,244 +315,246 @@ void inv_shift_rows(aes_state_t state) {
 // 13 9 14 11
 // 11 13 9 14
 
-void inv_mix_column(uint8_t* column) {
-	uint8_t cpy[4];
+void inv_mix_column(uint8_t *column) {
+  uint8_t cpy[4];
 
-	// PERF: use memcpy
-	// memcpy(cpy, column, 4);
+  // PERF: use memcpy
+  // memcpy(cpy, column, 4);
 
-	for (uint8_t i = 0; i < 4; i++) {
-		cpy[i] = column[i];
-	}
+  for (uint8_t i = 0; i < 4; i++) {
+    cpy[i] = column[i];
+  }
 
-	column[0] = galois_mul2(cpy[0], 14) ^ galois_mul2(cpy[3], 9) ^ galois_mul2(cpy[2], 13) ^ galois_mul2(cpy[1], 11);
-	column[1] = galois_mul2(cpy[1], 14) ^ galois_mul2(cpy[0], 9) ^ galois_mul2(cpy[3], 13) ^ galois_mul2(cpy[2], 11);
-	column[2] = galois_mul2(cpy[2], 14) ^ galois_mul2(cpy[1], 9) ^ galois_mul2(cpy[0], 13) ^ galois_mul2(cpy[3], 11);
-	column[3] = galois_mul2(cpy[3], 14) ^ galois_mul2(cpy[2], 9) ^ galois_mul2(cpy[1], 13) ^ galois_mul2(cpy[0], 11);
+  column[0] = galois_mul2(cpy[0], 14) ^ galois_mul2(cpy[3], 9) ^
+              galois_mul2(cpy[2], 13) ^ galois_mul2(cpy[1], 11);
+  column[1] = galois_mul2(cpy[1], 14) ^ galois_mul2(cpy[0], 9) ^
+              galois_mul2(cpy[3], 13) ^ galois_mul2(cpy[2], 11);
+  column[2] = galois_mul2(cpy[2], 14) ^ galois_mul2(cpy[1], 9) ^
+              galois_mul2(cpy[0], 13) ^ galois_mul2(cpy[3], 11);
+  column[3] = galois_mul2(cpy[3], 14) ^ galois_mul2(cpy[2], 9) ^
+              galois_mul2(cpy[1], 13) ^ galois_mul2(cpy[0], 11);
 }
 
 void inv_mix_columns(aes_state_t state) {
-	uint8_t column[4];
+  uint8_t column[4];
 
-	// iterate over the 4 columns
-	for (uint8_t i = 0; i < 4; i++) {
-		// construct one column by iterating over the 4 rows
-		for (uint8_t j = 0; j < 4; j++) {
-			// column[j] = state[(i * 4) + j];
-			column[j] = state[(j * 4) + i];
-		}
-		// apply the mix_column on one column
-		inv_mix_column(column);
-		// put the values back into the state
-		for (uint8_t j = 0; j < 4; j++) {
-			// state[(i * 4) + j] = column[j];
-			state[(j * 4) + i] = column[j];
-		}
-	}
+  // iterate over the 4 columns
+  for (uint8_t i = 0; i < 4; i++) {
+    // construct one column by iterating over the 4 rows
+    for (uint8_t j = 0; j < 4; j++) {
+      // column[j] = state[(i * 4) + j];
+      column[j] = state[(j * 4) + i];
+    }
+    // apply the mix_column on one column
+    inv_mix_column(column);
+    // put the values back into the state
+    for (uint8_t j = 0; j < 4; j++) {
+      // state[(i * 4) + j] = column[j];
+      state[(j * 4) + i] = column[j];
+    }
+  }
 }
 
 // Rijndael's key expansion
 // expand an 128 bit key into and 176 key
 // expanded key is a 176 bytes array
-void aes_128_expand_key(aes_128_expanded_key_t expanded_key, aes_128_key_t key) {
-	uint8_t current_size = 0;
+void aes_128_expand_key(aes_128_expanded_key_t expanded_key,
+                        aes_128_key_t key) {
+  uint8_t current_size = 0;
 
-	for (uint8_t i = 0; i < 16; i++) {
-		expanded_key[i] = key[i];
-	}
+  for (uint8_t i = 0; i < 16; i++) {
+    expanded_key[i] = key[i];
+  }
 
-	current_size += 16;
+  current_size += 16;
 
-	const uint8_t expanded_key_size = 176;  // 176 / 8
+  const uint8_t expanded_key_size = 176; // 176 / 8
 
-	uint8_t rcon_iteration = 1;
-	uint8_t t[4] = { 0 }; // temporary 4 byte variable
-	// while the current size is less than the expanded key size
-	while (current_size < expanded_key_size) {
-		// assign the previous 4 bytes to the temporary value t
-		for (uint8_t i = 0; i < 4; i++) {
-			t[i] = expanded_key[(current_size - 4) + i];
-		}
+  uint8_t rcon_iteration = 1;
+  uint8_t t[4] = {0}; // temporary 4 byte variable
+  // while the current size is less than the expanded key size
+  while (current_size < expanded_key_size) {
+    // assign the previous 4 bytes to the temporary value t
+    for (uint8_t i = 0; i < 4; i++) {
+      t[i] = expanded_key[(current_size - 4) + i];
+    }
 
-		// every 16 bytes we apply the core schedule to t
-		// and increment rcon_iteration afterwards
-		if (current_size % 16 == 0) {
-			core(t, rcon_iteration++);
-		}
+    // every 16 bytes we apply the core schedule to t
+    // and increment rcon_iteration afterwards
+    if (current_size % 16 == 0) {
+      core(t, rcon_iteration++);
+    }
 
-
-		// XOR t with the four byte block 16 bytes before the new expanded key.
-		// This becomes the next four bytes in the expanded key.
-		for (uint8_t i = 0; i < 4; i++) {
-			expanded_key[current_size] = expanded_key[current_size - 16] ^ t[i];
-			current_size++;
-		}
-	}
+    // XOR t with the four byte block 16 bytes before the new expanded key.
+    // This becomes the next four bytes in the expanded key.
+    for (uint8_t i = 0; i < 4; i++) {
+      expanded_key[current_size] = expanded_key[current_size - 16] ^ t[i];
+      current_size++;
+    }
+  }
 }
 
-void aes_round(aes_state_t state, uint8_t* round_key) {
-	sub_bytes(state);
-	shift_rows(state);
-	mix_columns(state);
-	add_round_key(state, round_key);
+void aes_round(aes_state_t state, uint8_t *round_key) {
+  sub_bytes(state);
+  shift_rows(state);
+  mix_columns(state);
+  add_round_key(state, round_key);
 }
 
-void create_round_key(uint8_t* expanded_key, uint8_t* round_key) {
+void create_round_key(uint8_t *expanded_key, uint8_t *round_key) {
 
-	// iterate over the columns
-	for (uint8_t i = 0; i < 4; i++) {
-		// iterate over the rows
-		for (uint8_t j = 0; j < 4; j++) {
-			// set the round key value
-			// the round key is constructed from the expanded key
-			// the round key is the 16 bytes of the expanded key
-			// starting at the 16th byte
-			round_key[(i + (j * 4))] = expanded_key[(i * 4) + j];
-		}
-	}
-
+  // iterate over the columns
+  for (uint8_t i = 0; i < 4; i++) {
+    // iterate over the rows
+    for (uint8_t j = 0; j < 4; j++) {
+      // set the round key value
+      // the round key is constructed from the expanded key
+      // the round key is the 16 bytes of the expanded key
+      // starting at the 16th byte
+      round_key[(i + (j * 4))] = expanded_key[(i * 4) + j];
+    }
+  }
 }
 
-
-void aes_inv_round(aes_state_t state, uint8_t*	round_key) {
-	inv_shift_rows(state);
-	inv_sub_bytes(state);
-	add_round_key(state, round_key);
-	inv_mix_columns(state);
+void aes_inv_round(aes_state_t state, uint8_t *round_key) {
+  inv_shift_rows(state);
+  inv_sub_bytes(state);
+  add_round_key(state, round_key);
+  inv_mix_columns(state);
 }
 
-void aes_inv_main(aes_state_t state, uint8_t* expanded_key, uint8_t nr) {
-	uint8_t round_key[16];
+void aes_inv_main(aes_state_t state, uint8_t *expanded_key, uint8_t nr) {
+  uint8_t round_key[16];
 
-	// add the first round key to the state before starting the rounds
-	create_round_key(expanded_key + (nr * 16), round_key);
-	add_round_key(state, round_key);
+  // add the first round key to the state before starting the rounds
+  create_round_key(expanded_key + (nr * 16), round_key);
+  add_round_key(state, round_key);
 
-	// apply nr rounds
-	for (uint8_t i = nr - 1; i > 0; i--) {
-		create_round_key(expanded_key + (i * 16), round_key);
-		aes_inv_round(state, round_key);
-	}
+  // apply nr rounds
+  for (uint8_t i = nr - 1; i > 0; i--) {
+    create_round_key(expanded_key + (i * 16), round_key);
+    aes_inv_round(state, round_key);
+  }
 
-	// the last round is special
-	// there is no mix_columns in the last round
-	create_round_key(expanded_key, round_key);
-	inv_shift_rows(state);
-	inv_sub_bytes(state);
-	add_round_key(state, round_key);
+  // the last round is special
+  // there is no mix_columns in the last round
+  create_round_key(expanded_key, round_key);
+  inv_shift_rows(state);
+  inv_sub_bytes(state);
+  add_round_key(state, round_key);
 }
 
-void aes_128_decrypt_block(aes_128_block_t input, aes_128_block_t output, aes_128_key_t key) {
-	// we cannot malloc, so we need to use a fixed size array, and therefore
-	// we are defensize by using the maximum key size
-	// uint8_t expanded_key[240]; // 240 = 15 * 16 -- the max size of the expanded key
-	
-	aes_128_expanded_key_t expanded_key = { 0 };
+void aes_128_decrypt_block(aes_128_block_t input, aes_128_block_t output,
+                           aes_128_key_t key) {
+  // we cannot malloc, so we need to use a fixed size array, and therefore
+  // we are defensize by using the maximum key size
+  // uint8_t expanded_key[240]; // 240 = 15 * 16 -- the max size of the expanded
+  // key
 
-	const uint8_t nr_rounds = 10; // number of rounds for 128 bit keys
+  aes_128_expanded_key_t expanded_key = {0};
 
-	// expand the key
-	// nr_rounds = aes_128_expand_key(expanded_key, key);
+  const uint8_t nr_rounds = 10; // number of rounds for 128 bit keys
 
-	// the input/output can alias each other
-	// copy the input to the output
-	// this avoids overwriting the input data
-	// while encrypting
-	// memcpy(output, input, 16);
+  // expand the key
+  // nr_rounds = aes_128_expand_key(expanded_key, key);
 
-	uint8_t block[16];
-	// set the block values, for the block we are going to decrypt
-	// a(0,0) a(0,1) a(0,2) a(0,3)
-	// a(1,0) a(1,1) a(1,2) a(1,3)
-	// a(2,0) a(2,1) a(2,2) a(2,3)
-	// a(3,0) a(3,1) a(3,2) a(3,3)
-	// the mapping order is column major
-	
-	// iterate over the columns
-	for (uint8_t i = 0; i < 4; i++) {
-		// iterate over the rows
-		for (uint8_t j = 0; j < 4; j++) {
-			// set the block value
-			block[(i + (j * 4))] = input[(i * 4) + j];
-		}
-	}
+  // the input/output can alias each other
+  // copy the input to the output
+  // this avoids overwriting the input data
+  // while encrypting
+  // memcpy(output, input, 16);
 
-	aes_128_expand_key(expanded_key, key);
+  uint8_t block[16];
+  // set the block values, for the block we are going to decrypt
+  // a(0,0) a(0,1) a(0,2) a(0,3)
+  // a(1,0) a(1,1) a(1,2) a(1,3)
+  // a(2,0) a(2,1) a(2,2) a(2,3)
+  // a(3,0) a(3,1) a(3,2) a(3,3)
+  // the mapping order is column major
 
+  // iterate over the columns
+  for (uint8_t i = 0; i < 4; i++) {
+    // iterate over the rows
+    for (uint8_t j = 0; j < 4; j++) {
+      // set the block value
+      block[(i + (j * 4))] = input[(i * 4) + j];
+    }
+  }
 
-	// decrypt the 16 byte input block
-	aes_inv_main(block, expanded_key, nr_rounds);
+  aes_128_expand_key(expanded_key, key);
 
-	// unmap the block values back into the output
-	for (uint8_t i = 0; i < 4; i++) {
-		for (uint8_t j = 0; j < 4; j++) {
-			output[(i * 4) + j] = block[(i + (j * 4))];
-		}
-	}
+  // decrypt the 16 byte input block
+  aes_inv_main(block, expanded_key, nr_rounds);
+
+  // unmap the block values back into the output
+  for (uint8_t i = 0; i < 4; i++) {
+    for (uint8_t j = 0; j < 4; j++) {
+      output[(i * 4) + j] = block[(i + (j * 4))];
+    }
+  }
 }
 
+void aes_main(aes_state_t state, aes_128_expanded_key_t expanded_key,
+              uint8_t nr) {
+  uint8_t round_key[16];
 
+  // add the initial round key to the state before starting the rounds
+  create_round_key(expanded_key, round_key);
+  add_round_key(state, round_key);
 
-void aes_main(aes_state_t state, aes_128_expanded_key_t expanded_key, uint8_t nr) {
-	uint8_t round_key[16];
+  // there will be nr rounds
+  // the first nr-1 rounds are identical
+  // these nr-1 rounds are executed in the loop below
+  for (uint8_t i = 0; i < nr - 1; ++i) {
+    create_round_key(expanded_key + (16 * (i + 1)), round_key);
+    aes_round(state, round_key);
+  }
 
-	// add the initial round key to the state before starting the rounds
-	create_round_key(expanded_key, round_key);
-	add_round_key(state, round_key);
-
-	// there will be nr rounds
-	// the first nr-1 rounds are identical
-	// these nr-1 rounds are executed in the loop below
-	for (uint8_t i = 0; i < nr - 1; ++i) {
-		create_round_key(expanded_key + (16 * (i + 1)), round_key);
-		aes_round(state, round_key);
-	}
-
-	// the last round is given below
-	// the mix_columns function is not here in the last round
-	create_round_key(expanded_key + (16 * nr), round_key);
-	sub_bytes(state);
-	shift_rows(state);
-	add_round_key(state, round_key);
+  // the last round is given below
+  // the mix_columns function is not here in the last round
+  create_round_key(expanded_key + (16 * nr), round_key);
+  sub_bytes(state);
+  shift_rows(state);
+  add_round_key(state, round_key);
 }
 
 // NOTE: this does the encryption in place
-void aes_128_encrypt_block(uint8_t *input_block, uint8_t *output_block, uint8_t *key) {
-	const uint8_t expanded_key_size = 176;
-	uint8_t expanded_key[expanded_key_size];
-	uint8_t nr_rounds = 10; // 10 for a key of 128 bits
+void aes_128_encrypt_block(aes_128_block_t input_block,
+                           aes_128_block_t output_block, aes_128_key_t key) {
+  const uint8_t expanded_key_size = 176;
+  uint8_t expanded_key[expanded_key_size];
+  uint8_t nr_rounds = 10; // 10 for a key of 128 bits
 
-	aes_128_block_t block; // the block we are going to encrypt
-	
-	// set the block values, for the block we are going to encrypt
-	// a(0,0) a(0,1) a(0,2) a(0,3)
-	// a(1,0) a(1,1) a(1,2) a(1,3)
-	// a(2,0) a(2,1) a(2,2) a(2,3)
-	// a(3,0) a(3,1) a(3,2) a(3,3)
-	// the mapping order is column major
-	
-	// iterate over the columns
-	for (uint8_t i = 0; i < 4; i++) {
-		// iterate over the rows
-		for (uint8_t j = 0; j < 4; j++) {
-			// set the block value
-			block[(i + (j * 4))] = input_block[(i * 4) + j];
-		}
-	}
+  aes_128_block_t block; // the block we are going to encrypt
 
-	aes_128_expand_key(expanded_key, key);
+  // set the block values, for the block we are going to encrypt
+  // a(0,0) a(0,1) a(0,2) a(0,3)
+  // a(1,0) a(1,1) a(1,2) a(1,3)
+  // a(2,0) a(2,1) a(2,2) a(2,3)
+  // a(3,0) a(3,1) a(3,2) a(3,3)
+  // the mapping order is column major
 
-	// encrypt the 16 byte input block using the expanded key
-	aes_main(block, expanded_key, nr_rounds);
+  // iterate over the columns
+  for (uint8_t i = 0; i < 4; i++) {
+    // iterate over the rows
+    for (uint8_t j = 0; j < 4; j++) {
+      // set the block value
+      block[(i + (j * 4))] = input_block[(i * 4) + j];
+    }
+  }
 
-	// unmap the block values back into the output
-	for (uint8_t i = 0; i < 4; i++) {
-		for (uint8_t j = 0; j < 4; j++) {
-			output_block[(i * 4) + j] = block[(i + (j * 4))];
-		}
-	}
+  aes_128_expand_key(expanded_key, key);
+
+  // encrypt the 16 byte input block using the expanded key
+  aes_main(block, expanded_key, nr_rounds);
+
+  // unmap the block values back into the output
+  for (uint8_t i = 0; i < 4; i++) {
+    for (uint8_t j = 0; j < 4; j++) {
+      output_block[(i * 4) + j] = block[(i + (j * 4))];
+    }
+  }
 }
-
 
 // void aes_128_ecb_encrypt(uint8_t *key, uint8_t *data, size_t data_len) {
 //   assert(data_len % AES_BLOCK_SIZE == 0);

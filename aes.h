@@ -33,7 +33,7 @@ void sub_bytes(aes_state_t state);
 void shift_rows(aes_state_t state);
 void inv_shift_rows(aes_state_t state);
 void mix_columns(aes_state_t state);
-void add_round_key(aes_state_t state, uint8_t *round_key);
+void add_round_key(aes_state_t state, aes_128_key_t round_key);
 
 
 void aes_128_expand_key(aes_128_expanded_key_t expanded_key,aes_128_key_t key);
@@ -42,16 +42,6 @@ void aes_128_expand_key(aes_128_expanded_key_t expanded_key,aes_128_key_t key);
 void aes_128_encrypt_block(aes_128_block_t input_block, aes_128_block_t output_block, aes_128_key_t key);
 void aes_128_decrypt_block(aes_128_block_t input_block, aes_128_block_t output_block, aes_128_key_t key);
 
-// encrypt data with key using ecb (electronic codebook) mode
-void aes_128_ecb_encrypt(aes_128_key_t key, uint8_t *input_data, uint8_t* output_data, size_t data_len);
-// decrypt data with key using ecb (electronic codebook) mode
-void aes_128_ecb_decrypt(aes_128_key_t key, uint8_t *input_data, uint8_t* output_data, size_t data_len);
-
-// encrypt data with key using cbc (cipher block chaining) mode
-void aes_128_cbc_encrypt(aes_128_key_t key, uint8_t *input_data, uint8_t* output_data, size_t data_len, aes_128_block_t iv);
-// decrypt data with key using cbc (cipher block chaining) mode
-// NOTE: the iv is used as the first block of the input data
-void aes_128_cbc_decrypt(aes_128_key_t key, uint8_t *input_data, uint8_t* output_data, size_t data_len, aes_128_block_t iv);
 
 // encrypt data with key using ctr (counter) mode
 void aes_128_ctr_encrypt(aes_128_key_t key, uint8_t *input_data, uint8_t* output_data, size_t data_len, aes_128_block_t iv);

@@ -1,7 +1,12 @@
+#define AES_128_CONF aes_128_driver // Turns on software AES-128
+
+#define ENERGEST_CONF_ON 1 // Enables energest to measure energy consumption
+
 #include "contiki.h"
 #include "sys/log.h"
 #include <time.h>   
-#include <os/lib/aes-128.h>
+#include <lib/aes-128.h>
+
 
 PROCESS(main_process, "main_process");
 
@@ -14,17 +19,9 @@ PROCESS_THREAD(main_process, ev, data)
     AES_128.set_key(key);
     uint8_t *plaintext = (uint8_t *) "abcdefghijklmnop";
     AES_128.encrypt(plaintext);
-    printf("result: %s", plaintext);
+    printf("result: %s\n", plaintext);
     AES_128.encrypt(plaintext);
     printf("result: %s", plaintext);
 
   PROCESS_END();
 }
-
-
-
-
-
- 
-
-

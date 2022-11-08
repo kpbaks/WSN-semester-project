@@ -1,7 +1,7 @@
 #include "contiki.h"
 #include "sys/log.h"
 #include <time.h>   
-#include <os/lib/aes-128.h>
+#include "net/nullnet/nullnet.h"
 
 PROCESS(main_process, "main_process");
 
@@ -9,14 +9,11 @@ AUTOSTART_PROCESSES(&main_process);
 
 PROCESS_THREAD(main_process, ev, data)
 {
-  PROCESS_BEGIN(); 
-    const uint8_t key[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f}; 
-    AES_128.set_key(key);
-    uint8_t *plaintext = (uint8_t *) "abcdefghijklmnop";
-    AES_128.encrypt(plaintext);
-    printf("result: %s", plaintext);
-    AES_128.encrypt(plaintext);
-    printf("result: %s", plaintext);
+	PROCESS_BEGIN(); 
+	uint8_t payload[64] = { 0 };
+	nullnet_buf = payload; /* Point NullNet buffer to 'payload' */
+	nullnet_len = 2; /* Tell NullNet that the payload length is two bytes */
+	NETSTACK_NETWORK.output(NULL); /* Send as broadcast */
 
   PROCESS_END();
 }

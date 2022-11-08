@@ -8,7 +8,8 @@
 
 void input_callback(const void *data, uint16_t len, const linkaddr_t *src,
                     const linkaddr_t *dest) {
-  LOG_INFO("Received %d bytes from ", len);
+	uint8_t *buf = (uint8_t *)data;
+	LOG_INFO("Received %u bytes containing [%s] from %s", len, buf, src->u8);
 }
 
 PROCESS(main_process, "main_process");
@@ -21,7 +22,7 @@ PROCESS_THREAD(main_process, ev, data) {
   /* At process initialization */
   nullnet_set_input_callback(input_callback);
   static struct etimer et;
-  etimer_set(&et, CLOCK_SECOND * 1);
+  etimer_set(&et, CLOCK_SECOND * 0.1);
 
   while (1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));

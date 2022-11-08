@@ -1,0 +1,12 @@
+expand_key (aes_128_expand_key) = DONE;
+
+shift_rows = DONE;
+inv_shift_rows = DONE;
+
+mix_columns = DONE;
+inv_mix_columns = DONE;
+
+sub_bytes = DONE;
+inv_sub_bytes = DONE;
+
+add_round_key = DONE;

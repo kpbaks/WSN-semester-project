@@ -1,30 +1,32 @@
 #include "contiki.h"
+#include "net/nullnet/nullnet.h"
 #include "sys/log.h"
-#include <time.h>   
-#include <os/lib/aes-128.h>
+
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_INFO
+#include <time.h>
+
+void input_callback(const void *data, uint16_t len, const linkaddr_t *src,
+                    const linkaddr_t *dest) {
+  LOG_INFO("Received %d bytes from ", len);
+}
 
 PROCESS(main_process, "main_process");
 
 AUTOSTART_PROCESSES(&main_process);
 
-PROCESS_THREAD(main_process, ev, data)
-{
-  PROCESS_BEGIN(); 
-    const uint8_t key[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f}; 
-    AES_128.set_key(key);
-    uint8_t *plaintext = (uint8_t *) "abcdefghijklmnop";
-    AES_128.encrypt(plaintext);
-    printf("result: %s", plaintext);
-    AES_128.encrypt(plaintext);
-    printf("result: %s", plaintext);
+PROCESS_THREAD(main_process, ev, data) {
+  PROCESS_BEGIN();
+
+  /* At process initialization */
+  nullnet_set_input_callback(input_callback);
+  static struct etimer et;
+  etimer_set(&et, CLOCK_SECOND * 1);
+
+  while (1) {
+    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+    etimer_reset(&et);
+  }
 
   PROCESS_END();
 }
-
-
-
-
-
- 
-
-

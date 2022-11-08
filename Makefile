@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = enc
+CONTIKI_PROJECT = receiver
 all: $(CONTIKI_PROJECT)
 
 CONTIKI = ../..

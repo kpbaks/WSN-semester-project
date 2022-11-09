@@ -1,8 +1,7 @@
-# CONTIKI_PROJECT = enc
-CONTIKI_PROJECT = homemade-aes-on-mote
+CONTIKI_PROJECT = enc
 all: $(CONTIKI_PROJECT)
 
-CFLAGS += -02 # we want binary to be as small as possible
+# CFLAGS += -02 # we want binary to be as small as possible
 
 CONTIKI = ../..
 # TARGET_LIBFILES += -lm

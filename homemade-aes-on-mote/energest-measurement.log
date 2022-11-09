@@ -1,0 +1,811 @@
+make IHEXFILE=homemade_aes.ihex sky-reset sky-upload
+make[1]: Entering directory '/home/user/contiki-ng/exercises/WSN-semester-project/homemade-aes-on-mote'
+make -k -j 20 sky-reset-sequence
+make[2]: Entering directory '/home/user/contiki-ng/exercises/WSN-semester-project/homemade-aes-on-mote'
+../../../tools/sky/msp430-bsl-linux --telosb -c /dev/ttyUSB0 -r
+Done
+make[2]: Leaving directory '/home/user/contiki-ng/exercises/WSN-semester-project/homemade-aes-on-mote'
+make -j 20 sky-upload-sequence
+make[2]: Entering directory '/home/user/contiki-ng/exercises/WSN-semester-project/homemade-aes-on-mote'
++++++ Erasing /dev/ttyUSB0
++++++ Programming /dev/ttyUSB0
++++++ Resetting /dev/ttyUSB0
+Done
+make[2]: Leaving directory '/home/user/contiki-ng/exercises/WSN-semester-project/homemade-aes-on-mote'
+make[1]: Leaving directory '/home/user/contiki-ng/exercises/WSN-semester-project/homemade-aes-on-mote'
+rlwrap ../../../tools/serial-io/serialdump -b115200 /dev/ttyUSB0
+cc2420_process: started
+[INFO: Main      ] Starting Contiki-NG-release/v4.8-342-g27cbe8cc6-dirty
+[INFO: Main      ] - Routing: RPL Lite
+[INFO: Main      ] - Net: sicslowpan
+[INFO: Main      ] - MAC: CSMA
+[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+[INFO: Main      ] - 802.15.4 Default channel: 26
+[INFO: Main      ] Node ID: 42200
+[INFO: Main      ] Link-layer address: 0012.7400.1cdf.a4d8
+[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7400:1cdf:a4d8
+[INFO: Sky       ] CC2420 CCA threshold -45
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: 8!!ËáMpËb_2ì:(ò
+[INFO: App       ] decrypted: hello world abc
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: E{ã&,åI+±½2ê¬
+[INFO: App       ] decrypted: hello world abc
+[INFO: Energest  ] --- Period summary #0 (60 seconds)
+[INFO: Energest  ] Total time  :    1968183
+[INFO: Energest  ] CPU         :      31942/   1968183 (16 permil)
+[INFO: Energest  ] LPM         :    1936241/   1968183 (983 permil)
+[INFO: Energest  ] Deep LPM    :          0/   1968183 (0 permil)
+[INFO: Energest  ] Radio Tx    :          0/   1968183 (0 permil)
+[INFO: Energest  ] Radio Rx    :    1968183/   1968183 (1000 permil)
+[INFO: Energest  ] Radio total :    1968183/   1968183 (1000 permil)
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: )à%f”¹ù~s}T€ş
+[INFO: App       ] decrypted: hello world abc
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: &¥+{o½É}Ç¿ÚÿıOğ
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: 0?³)‡t=zËY›AA
+[INFO: App       ] decrypted: hello world abc
+[INFO: Energest  ] --- Period summary #1 (60 seconds)
+[INFO: Energest  ] Total time  :    1966081
+[INFO: Energest  ] CPU         :      56928/   1966081 (28 permil)
+[INFO: Energest  ] LPM         :    1909153/   1966081 (971 permil)
+[INFO: Energest  ] Deep LPM    :          0/   1966081 (0 permil)
+[INFO: Energest  ] Radio Tx    :         29/   1966081 (0 permil)
+[INFO: Energest  ] Radio Rx    :    1966050/   1966081 (999 permil)
+[INFO: Energest  ] Radio total :    1966079/   1966081 (999 permil)
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: )à%f”¹ù~s}T€ş
+[INFO: App       ] decrypted: hello world abc
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: 8!!ËáMpËb_2ì:(ò
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: 8!!ËáMpËb_2ì:(ò
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: E{ã&,åI+±½2ê¬
+[INFO: App       ] decrypted: hello world abc
+[INFO: Energest  ] --- Period summary #2 (60 seconds)
+[INFO: Energest  ] Total time  :    1966081
+[INFO: Energest  ] CPU         :      53536/   1966081 (27 permil)
+[INFO: Energest  ] LPM         :    1912545/   1966081 (972 permil)
+[INFO: Energest  ] Deep LPM    :          0/   1966081 (0 permil)
+[INFO: Energest  ] Radio Tx    :          0/   1966081 (0 permil)
+[INFO: Energest  ] Radio Rx    :    1966081/   1966081 (1000 permil)
+[INFO: Energest  ] Radio total :    1966081/   1966081 (1000 permil)
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: ¦¹%†§•šéa’gõMmèk
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: 8!!ËáMpËb_2ì:(ò
+[INFO: App       ] decrypted: hello world abc
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+cc2420: sending 25 bytes
+cc2420: do_send() transmission never started
+[INFO: App       ] plaintext: hello world abc
+[INFO: App       ] ciphertext: *Y{:¸]|E.PÁ¨ÀåÍÉ
+[INFO: App       ] decrypted: hello world abc

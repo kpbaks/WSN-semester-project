@@ -1,15 +1,17 @@
 #include "contiki.h"
 #include "net/nullnet/nullnet.h"
 #include "sys/log.h"
+#include <string.h>
 
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 #include <time.h>
 
-void input_callback(const void *data, uint16_t len, const linkaddr_t *src,
-                    const linkaddr_t *dest) {
+void input_callback(const void *data, uint16_t len, const linkaddr_t *src, const linkaddr_t *dest) {
 	uint8_t *buf = (uint8_t *)data;
-	LOG_INFO("Received %u bytes containing [%s] from %s\n", len, buf, src->u8);
+  uint32_t counter = 0;
+  memcpy(&counter, buf, sizeof(counter));
+	LOG_INFO("Received %u bytes containing [%u] from %s\n", len, (uint) counter, src->u8);
 }
 
 PROCESS(main_process, "main_process");

@@ -18,6 +18,8 @@ PROCESS_THREAD(main_process, ev, data)
 
 	static struct etimer et;
 
+	uint32_t counter = 0;
+
 	// Set the timer to 2 seconds
 	etimer_set(&et, CLOCK_SECOND * 2);
 
@@ -27,7 +29,9 @@ PROCESS_THREAD(main_process, ev, data)
 
 
 	uint8_t payload[64] = { 0 };
-	const char *msg = "Hello World!";
+			
+	char *msg = "msg: ";
+	sprintf(payload, "%s %d", msg, counter++);
 	memcpy(payload, msg, strlen(msg));
 
 

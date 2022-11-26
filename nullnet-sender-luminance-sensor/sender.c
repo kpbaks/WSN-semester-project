@@ -28,6 +28,61 @@ static void print_aes_block_as_hex(uint8_t *block) {
 }
 
 
+
+// Encode 8 bits of data into 2 (8,4) hamming codes concatenated
+// into a short word (16 bits)
+// The encoding of the upper 4 bits is stored in the upper 8 bits
+// of the output word, and the encoding of the lower 4 bits is
+// stored in the lower 8 bits of the output word.
+uint16_t hamming_8_4_encode(uint8_t byte) {
+
+  // lookup table for (8,4) hamming code
+  // 4 data bits -> 8 hamming code bits
+  // (d1,d2,d3,d4) -> (p1,p2,d1,p3,d2,d3,d4,p4)
+  // the 0th is used for error detection, and is the parity of the encoded byte
+  // the 1st is used for error correction, and is the parity of
+  //
+  // clang-format off
+static const uint8_t hamming_8_4_encode_lut[16] = {
+    0b00000000, // 0b0000 [0]
+	0b11010010, // 0b0001 [1]
+	0b01010101, // 0b0010 [2]
+	0b10000111, // 0b0011 [3]
+	0b10011001, // 0b0100 [4]
+	0b01001011, // 0b0101 [5]
+    0b11001100, // 0b0110 [6]
+	0b00011110, // 0b0111 [7]
+	0b11100001, // 0b1000 [8]
+	0b00110011, // 0b1001 [9]
+	0b10110100, // 0b1010 [10]
+	0b01100110, // 0b1011 [11]
+    0b01111000, // 0b1100 [12]
+	0b10101010, // 0b1101 [13]
+	0b00101101, // 0b1110 [14]
+	0b11111111, // 0b1111 [15]
+};
+  // clang-format on
+
+  const uint8_t upper4 = byte & 0xf0;
+  const uint8_t lower4 = byte & 0x0f;
+
+  const uint8_t upper4_encoded = hamming_8_4_encode_lut[upper4 >> 4];
+  const uint8_t lower4_encoded = hamming_8_4_encode_lut[lower4];
+
+  const uint16_t encoded =
+      ((uint16_t)upper4_encoded << 8) | (uint16_t)lower4_encoded;
+  return encoded;
+}
+
+void encode_128_bit_aes_block_with_8_4_hamming_code(const uint8_t *data,
+                                                    uint16_t *hamming_code) {
+  for (int i = 0; i < 16; i++) {
+    const uint16_t encoded = hamming_8_4_encode(data[i]);
+    hamming_code[i] = encoded;
+  }
+}
+
+
 PROCESS(main_process, "main_process");
 
 AUTOSTART_PROCESSES(&main_process);
@@ -65,15 +120,24 @@ PROCESS_THREAD(main_process, ev, data) {
 		// get the time right now
 		// t_start = clock_time();
 
-		light = get_light();
+		static int i = 0;
+		i = 1;
+		i -= 1;
+		for (i = 0; i < 4; i++) {
+			uint32_t light = get_light();
+			uint8_t offset = i * 4;
+
+			memcpy(encrypted + offset, &light, sizeof(uint32_t));
+			PROCESS_PAUSE(); // yield to other processes
+		}
 
 		// The last 8 bytes, are empty, as the the aes block size is 16 bytes
 		// and we only need 4 bytes for the light value, and 4 bytes for the counter.
-		memset(encrypted, 0x00, sizeof(encrypted));
-		memcpy(encrypted, &count, sizeof(count));
-		memcpy(encrypted + sizeof(count), &light, sizeof(light));
+		// memset(encrypted, 0x00, sizeof(encrypted));
+		// memcpy(encrypted, &count, sizeof(count));
+		// memcpy(encrypted + sizeof(count), &light, sizeof(light));
 
-		LOG_INFO("packet (cleartext): ");
+		LOG_INFO("packet (cleartext) %d: ", i);
 		print_aes_block_as_hex(encrypted);
 		AES_128.encrypt(encrypted);
 		PROCESS_PAUSE(); // yield to other processes

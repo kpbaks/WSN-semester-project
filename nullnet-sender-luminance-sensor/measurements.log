@@ -1,3 +1,91 @@
+  CC        sender.c
+  CC        ../../../os/contiki-main.c
+  CC        ../../../arch/platform/sky/./contiki-sky-platform.c
+  CC        ../../../arch/dev/sensor/sht11/sht11.c
+  CC        ../../../arch/dev/sensor/sht11/sht11-sensor.c
+  CC        ../../../arch/platform/sky/dev/light-sensor.c
+  CC        ../../../arch/platform/sky/dev/battery-sensor.c
+  CC        ../../../arch/platform/sky/dev/button-sensor.c
+  CC        ../../../arch/cpu/msp430/f1xxx/spi-legacy.c
+  CC        ../../../arch/dev/etc/ds2411/ds2411.c
+  CC        ../../../arch/platform/sky/dev/xmem.c
+  CC        ../../../arch/platform/sky/dev/i2c.c
+  CC        ../../../os/lib/sensors.c
+  CC        ../../../arch/dev/radio/cc2420/cc2420.c
+  CC        ../../../arch/cpu/msp430/./cc2420-arch.c
+  CC        ../../../arch/cpu/msp430/./cc2420-arch-sfd.c
+  CC        ../../../arch/platform/sky/dev/sky-sensors.c
+  CC        ../../../arch/cpu/msp430/./uip-ipchksum.c
+  CC        ../../../arch/cpu/msp430/f1xxx/uart1.c
+  CC        ../../../arch/cpu/msp430/./slip_uart1.c
+  CC        ../../../arch/cpu/msp430/dev/uart1-putchar.c
+  CC        ../../../arch/platform/sky/./platform.c
+  CC        ../../../arch/cpu/msp430/f1xxx/msp430.c
+  CC        ../../../arch/cpu/msp430/./flash.c
+  CC        ../../../arch/cpu/msp430/f1xxx/clock.c
+  CC        ../../../os/dev/leds.c
+  CC        ../../../arch/cpu/msp430/./leds-arch.c
+  CC        ../../../arch/cpu/msp430/./watchdog.c
+  CC        ../../../arch/cpu/msp430/./lpm.c
+  CC        ../../../arch/cpu/msp430/f1xxx/rtimer-arch.c
+  CC        ../../../arch/cpu/msp430/./int-master.c
+  CC        ../../../arch/dev/radio/cc2420/cc2420-tsch-15ms.c
+  CC        ../../../os/dev/button-hal.c
+  CC        ../../../os/dev/gpio-hal.c
+  CC        ../../../os/dev/serial-line.c
+  CC        ../../../os/dev/spi.c
+  CC        ../../../os/lib/aes-128.c
+  CC        ../../../os/lib/assert.c
+  CC        ../../../os/lib/ccm-star.c
+  CC        ../../../os/lib/circular-list.c
+  CC        ../../../os/lib/dbl-circ-list.c
+  CC        ../../../os/lib/dbl-list.c
+  CC        ../../../os/lib/heapmem.c
+  CC        ../../../os/lib/hexconv.c
+  CC        ../../../os/lib/ifft.c
+  CC        ../../../os/lib/list.c
+  CC        ../../../os/lib/memb.c
+  CC        ../../../os/lib/ringbuf.c
+  CC        ../../../os/lib/ringbufindex.c
+  CC        ../../../os/lib/trickle-timer.c
+  CC        ../../../os/net/link-stats.c
+  CC        ../../../os/net/linkaddr.c
+  CC        ../../../os/net/nbr-table.c
+  CC        ../../../os/net/net-debug.c
+  CC        ../../../os/net/netstack.c
+  CC        ../../../os/net/packetbuf.c
+  CC        ../../../os/net/queuebuf.c
+  CC        ../../../os/net/mac/mac-sequence.c
+  CC        ../../../os/net/mac/mac.c
+  CC        ../../../os/net/mac/csma/anti-replay.c
+  CC        ../../../os/net/mac/csma/ccm-star-packetbuf.c
+  CC        ../../../os/net/mac/csma/csma-output.c
+  CC        ../../../os/net/mac/csma/csma-security.c
+  CC        ../../../os/net/mac/csma/csma.c
+  CC        ../../../os/net/mac/framer/frame802154.c
+  CC        ../../../os/net/mac/framer/frame802154e-ie.c
+  CC        ../../../os/net/mac/framer/framer-802154.c
+  CC        ../../../os/net/mac/framer/nullframer.c
+  CC        ../../../os/net/nullnet/nullnet.c
+  CC        ../../../os/net/routing/nullrouting/nullrouting.c
+  CC        ../../../os/services/simple-energest/simple-energest.c
+  CC        ../../../os/storage/cfs/cfs-coffee.c
+  CC        ../../../os/sys/atomic.c
+  CC        ../../../os/sys/autostart.c
+  CC        ../../../os/sys/compower.c
+  CC        ../../../os/sys/ctimer.c
+  CC        ../../../os/sys/energest.c
+  CC        ../../../os/sys/etimer.c
+  CC        ../../../os/sys/log.c
+  CC        ../../../os/sys/mutex.c
+  CC        ../../../os/sys/node-id.c
+  CC        ../../../os/sys/process.c
+  CC        ../../../os/sys/rtimer.c
+  CC        ../../../os/sys/stack-check.c
+  CC        ../../../os/sys/stimer.c
+  CC        ../../../os/sys/timer.c
+  LD        build/sky/sender.sky
+msp430-objcopy build/sky/sender.sky -O ihex sender.ihex
 make IHEXFILE=sender.ihex sky-reset sky-upload
 make[1]: Entering directory '/home/user/contiki-ng/exercises/WSN-semester-project/nullnet-sender-luminance-sensor'
 make -k -j 20 sky-reset-sequence
@@ -23,613 +111,107 @@ rlwrap ../../../tools/serial-io/serialdump -b115200 /dev/ttyUSB0
 [INFO: Main      ] Node ID: 4608
 [INFO: Main      ] Link-layer address: d8a4.df1c.0074.1200
 [INFO: Sky       ] CC2420 CCA threshold -45
-[INFO: App       ] packet (cleartext): 00 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): e1 36 77 62 81 e1 83 cf 31 bd 3f 79 5e 70 2b f0 
-[INFO: App       ] Sending (0, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 01 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 84 22 0e f9 e3 b2 60 44 7b cf 99 7c 96 53 47 ae 
-[INFO: App       ] Sending (1, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 02 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): f9 99 ee 07 f5 cf f4 e6 1b c2 fe 8b 95 64 99 e1 
-[INFO: App       ] Sending (2, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 03 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): d8 2f 07 ef a7 82 8e 52 1e d8 d1 54 cb 7e ed 74 
-[INFO: App       ] Sending (3, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 04 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 1c d6 e4 18 d6 99 f7 3e 30 0d 7d 0c ab 1e 07 1c 
-[INFO: App       ] Sending (4, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 05 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #0 (30 seconds)
-[INFO: Energest  ] Total time  :     983255
-[INFO: Energest  ] CPU         :      48483/    983255 (49 permil)
-[INFO: Energest  ] LPM         :     934772/    983255 (950 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983255 (0 permil)
-[INFO: Energest  ] Radio Tx    :        180/    983255 (0 permil)
-[INFO: Energest  ] Radio Rx    :     164849/    983255 (167 permil)
-[INFO: Energest  ] Radio total :     165029/    983255 (167 permil)
-[INFO: App       ] packet (encrypted): 58 09 db 11 60 b7 82 2f ae fb 4f 69 ed dd 55 cc 
-[INFO: App       ] Sending (5, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 06 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): fc 7e 4c 43 79 19 82 ad a4 31 b2 bf a0 55 08 d6 
-[INFO: App       ] Sending (6, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 07 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 99 ef a4 6e c1 29 a7 48 a3 60 9f 76 28 32 aa 90 
-[INFO: App       ] Sending (7, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 08 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 1f ad 09 74 11 3a 04 d5 b6 eb 36 c0 c6 b3 fc 45 
-[INFO: App       ] Sending (8, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 09 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 57 d8 73 2d bb 7d 77 a6 53 63 00 87 53 5a 84 c1 
-[INFO: App       ] Sending (9, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 0a 00 00 00 7d 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): fa 70 cf d9 b9 e6 49 7c a2 0e fa 12 5d 65 75 0b 
-[INFO: App       ] Sending (10, 125) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 0b 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
+[INFO: App       ] packet (cleartext) 4: 45 01 00 00 44 01 00 00 44 01 00 00 5e 01 00 00 
+[INFO: App       ] packet (encrypted): b0 f2 fc 2c cb 4d 70 a2 16 33 ba 7c 34 05 11 45 
+[INFO: App       ] Sending (0, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 40 01 00 00 42 01 00 00 44 01 00 00 47 01 00 00 
+[INFO: App       ] packet (encrypted): e9 3c 37 a8 35 29 b4 67 cf 03 77 be fe 17 cb 56 
+[INFO: App       ] Sending (1, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 36 01 00 00 34 01 00 00 37 01 00 00 3d 01 00 00 
+[INFO: App       ] packet (encrypted): e2 b0 d3 84 46 00 18 62 41 cd bb c8 57 ee 3a 82 
+[INFO: App       ] Sending (2, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 4c 01 00 00 4a 01 00 00 4b 01 00 00 3a 01 00 00 
+[INFO: App       ] packet (encrypted): dd 3d 94 98 73 c3 a3 81 4f 46 a3 44 8f da 5a e0 
+[INFO: App       ] Sending (3, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 4e 01 00 00 4f 01 00 00 4f 01 00 00 4e 01 00 00 
+[INFO: App       ] packet (encrypted): 0c 05 4d 7c 09 01 41 9b 36 6b 6b 03 27 f5 4c 4c 
+[INFO: App       ] Sending (4, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: Energest  ] --- Period summary #0 (29 seconds)
+[INFO: Energest  ] Total time  :     982941
+[INFO: Energest  ] CPU         :      48073/    982941 (48 permil)
+[INFO: Energest  ] LPM         :     934868/    982941 (951 permil)
+[INFO: Energest  ] Deep LPM    :          0/    982941 (0 permil)
+[INFO: Energest  ] Radio Tx    :        182/    982941 (0 permil)
+[INFO: Energest  ] Radio Rx    :     164872/    982941 (167 permil)
+[INFO: Energest  ] Radio total :     165054/    982941 (167 permil)
+[INFO: App       ] packet (cleartext) 4: 47 01 00 00 4c 01 00 00 52 01 00 00 44 01 00 00 
+[INFO: App       ] packet (encrypted): cb 11 55 da 8b 84 d4 95 19 f2 cf 28 e7 d1 99 52 
+[INFO: App       ] Sending (5, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 48 01 00 00 48 01 00 00 48 01 00 00 4c 01 00 00 
+[INFO: App       ] packet (encrypted): e9 c1 7d 22 2f c6 eb e7 bc b4 9f d6 86 0f 0c c7 
+[INFO: App       ] Sending (6, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 4e 01 00 00 4e 01 00 00 52 01 00 00 56 01 00 00 
+[INFO: App       ] packet (encrypted): eb 36 5a eb 37 b5 b4 55 c9 aa a2 86 ad ea 8a 58 
+[INFO: App       ] Sending (7, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 37 01 00 00 4c 01 00 00 4c 01 00 00 4c 01 00 00 
+[INFO: App       ] packet (encrypted): 3c 28 57 ff dc b1 49 24 76 9c 1c a1 d1 e5 c7 2e 
+[INFO: App       ] Sending (8, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 41 01 00 00 41 01 00 00 44 01 00 00 44 01 00 00 
+[INFO: App       ] packet (encrypted): fc c4 65 93 db 0f bb 17 bd 49 cd 04 0e 4a 97 98 
+[INFO: App       ] Sending (9, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 44 01 00 00 42 01 00 00 41 01 00 00 41 01 00 00 
+[INFO: App       ] packet (encrypted): 3a b9 90 0e 38 c5 e6 97 a0 7e 60 8c 92 cb 4d 40 
+[INFO: App       ] Sending (10, 0) encrypted with AES 128 key, as nullnet BROADCAST
 [INFO: Energest  ] --- Period summary #1 (30 seconds)
 [INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53627/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929413/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        225/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        441/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): 1e aa 8d 88 32 35 87 9e 45 f0 27 0a ea 2f 6a 8b 
-[INFO: App       ] Sending (11, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 0c 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): db ca 2d 74 02 b1 30 9f 5c 14 db 2e c7 e6 61 9c 
-[INFO: App       ] Sending (12, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 0d 00 00 00 82 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 49 2d ff 98 90 70 85 61 d3 d4 fd ec 29 44 6d a2 
-[INFO: App       ] Sending (13, 130) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 0e 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 73 e2 6b 75 c7 91 d4 07 f3 77 5e 65 3c 2e 87 2b 
-[INFO: App       ] Sending (14, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 0f 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): dd cf 09 1b 57 e3 82 78 4c 99 55 cd dd 78 c9 64 
-[INFO: App       ] Sending (15, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 10 00 00 00 83 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 83 51 f7 83 1b 7b bc 39 85 59 74 cc 26 b5 41 28 
-[INFO: App       ] Sending (16, 131) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 11 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #2 (30 seconds)
-[INFO: Energest  ] Total time  :     983043
-[INFO: Energest  ] CPU         :      53293/    983043 (54 permil)
-[INFO: Energest  ] LPM         :     929750/    983043 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983043 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983043 (0 permil)
-[INFO: Energest  ] Radio Rx    :        228/    983043 (0 permil)
-[INFO: Energest  ] Radio total :        444/    983043 (0 permil)
-[INFO: App       ] packet (encrypted): c5 57 ce 1c 9f 2f 40 a7 6c 32 72 05 1f 0e 29 64 
-[INFO: App       ] Sending (17, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 12 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 65 72 ae e6 aa 26 fb dd 94 11 09 70 81 34 ab 0f 
-[INFO: App       ] Sending (18, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 13 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): c0 05 e7 a0 bc 24 5c 9c 09 9d 09 c4 d9 e3 10 f3 
-[INFO: App       ] Sending (19, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 14 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 41 46 b2 91 12 a6 ba de ca d1 19 d1 4d 84 82 1e 
-[INFO: App       ] Sending (20, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 15 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): bd ee 09 32 5f ab 0f de 1e 70 bc 99 b8 3b fc c2 
-[INFO: App       ] Sending (21, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 16 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 9c 83 f8 0a 8e 79 aa fd 26 ad 1b 59 57 40 e2 e5 
-[INFO: App       ] Sending (22, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 17 00 00 00 84 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #3 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53323/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929717/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        226/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        442/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): b0 4c 88 0d ba 8d 3f 10 19 9b 1e a6 2d 8e 35 51 
-[INFO: App       ] Sending (23, 132) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 18 00 00 00 82 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): b8 e8 59 f2 d0 7e 5f 9b 6b b4 45 98 a7 77 36 22 
-[INFO: App       ] Sending (24, 130) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 19 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): ae 73 c1 d2 cf 67 9e 84 17 45 47 30 47 fd 5e 56 
-[INFO: App       ] Sending (25, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 1a 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): f2 65 c6 06 88 f4 0b 3d e5 5b 77 da 51 5c 0f 5d 
-[INFO: App       ] Sending (26, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 1b 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 3e f8 c3 9a ef 2e 99 b8 a3 6c ff d9 6b b0 15 bb 
-[INFO: App       ] Sending (27, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 1c 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 0b c8 62 91 57 65 d4 10 07 24 1a a9 29 d9 84 71 
-[INFO: App       ] Sending (28, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 1d 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #4 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53436/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929604/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        224/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        440/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): 09 48 3b 05 e9 86 56 70 58 5c e3 8f 2c 67 52 d1 
-[INFO: App       ] Sending (29, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 1e 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): fd 92 1a d0 be 48 a0 4e 62 f2 8a 3e 94 37 fc d6 
-[INFO: App       ] Sending (30, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 1f 00 00 00 7c 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 36 e1 4d 23 67 55 5a fe f0 63 91 2e a4 17 71 b6 
-[INFO: App       ] Sending (31, 124) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 20 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 27 12 6e 00 09 71 60 04 74 5a fb 8d 03 c6 66 18 
-[INFO: App       ] Sending (32, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 21 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 8b 30 39 f1 5a f8 7a 58 f0 ce 83 66 e6 00 23 19 
-[INFO: App       ] Sending (33, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 22 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 8d c3 30 19 3b 10 d5 28 25 25 b5 1f a4 18 71 09 
-[INFO: App       ] Sending (34, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 23 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #5 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53313/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929727/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        227/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        443/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): b4 18 99 2f d4 c7 10 40 cb 72 73 05 b3 90 2d 3b 
-[INFO: App       ] Sending (35, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 24 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): ff ca c1 84 a7 36 d0 c4 92 1b 07 d3 cb 11 f5 b0 
-[INFO: App       ] Sending (36, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 25 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): c3 75 7d 8a b9 89 e2 15 81 14 d1 d4 19 05 ea 9f 
-[INFO: App       ] Sending (37, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 26 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 0d 16 a9 9e dc b1 d2 4f 25 56 44 23 57 3e 50 a7 
-[INFO: App       ] Sending (38, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 27 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 96 4c 4e 13 cb 26 c0 02 10 6b 9f c0 09 86 36 7f 
-[INFO: App       ] Sending (39, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 28 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 03 f6 57 4c 97 97 a2 05 25 6e a1 c7 4a 05 3e 57 
-[INFO: App       ] Sending (40, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 29 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #6 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53565/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929475/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        217/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        226/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        443/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): d3 28 2c 9e 03 2f 6e bb ee 4c 44 ef f7 f3 14 8a 
-[INFO: App       ] Sending (41, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 2a 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): e0 86 90 45 1d b0 5a 6c f4 ba 8b 0b f8 25 04 e4 
-[INFO: App       ] Sending (42, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 2b 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): fe e0 fc 8c d7 05 1b bc ae 2d f7 86 12 35 4c a6 
-[INFO: App       ] Sending (43, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 2c 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 75 1c 6c 0e 32 72 88 04 0c a1 e7 de b8 a8 24 32 
-[INFO: App       ] Sending (44, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 2d 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 4d 66 6a b6 d0 c9 a2 9d f7 fe 8f d5 44 c9 8c 04 
-[INFO: App       ] Sending (45, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 2e 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 5a 2c 99 c3 11 14 96 d5 ab b7 9a 16 61 f6 fa ea 
-[INFO: App       ] Sending (46, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 2f 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #7 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53311/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929729/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        224/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        440/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): cf 80 ae 0f cd 8a d7 fd b8 a6 e0 7c d2 f0 dc 20 
-[INFO: App       ] Sending (47, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 30 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 4d ab 4c a1 ce dd ef f3 56 a8 db eb 91 5a b6 e5 
-[INFO: App       ] Sending (48, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 31 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): d2 71 c9 2b f1 f3 7f 5c e8 6e 02 17 4a fa 27 5c 
-[INFO: App       ] Sending (49, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 32 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): b9 4c 97 5a 73 61 76 c2 c8 9f 3c ee f3 de 81 d1 
-[INFO: App       ] Sending (50, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 33 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 58 54 be 04 8e 94 32 5d 61 e6 d7 a2 c2 2d a6 f3 
-[INFO: App       ] Sending (51, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 34 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): c4 bc fe 08 33 8e 4c 1d df b3 66 d8 65 85 17 96 
-[INFO: App       ] Sending (52, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 35 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #8 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53584/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929456/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        226/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        442/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): 8c 9a 87 2c 3c 33 9f 0d 9d 24 57 a1 9e fd 7b 48 
-[INFO: App       ] Sending (53, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 36 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 58 f3 cb d0 32 5f 10 1e 01 05 93 7d 97 03 ad b9 
-[INFO: App       ] Sending (54, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 37 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 0f 9c 08 97 48 76 84 11 c1 e9 14 92 a4 1c 0d 96 
-[INFO: App       ] Sending (55, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 38 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 70 33 c5 64 ba 82 2a 61 8d fa 66 0b 46 38 b7 ad 
-[INFO: App       ] Sending (56, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 39 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): c4 de df 16 1e 7c 0e 61 14 75 97 44 2a 6a c6 36 
-[INFO: App       ] Sending (57, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 3a 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 09 d6 4a 57 d3 c0 88 9e 86 3b 8a 68 65 4a ba 16 
-[INFO: App       ] Sending (58, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 3b 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #9 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53293/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929747/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        226/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        442/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): 6d 52 08 78 60 4d 57 d7 80 b6 71 78 28 45 41 a9 
-[INFO: App       ] Sending (59, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 3c 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 74 a1 c3 fd 53 50 51 36 d0 e1 20 23 e0 1a 60 6f 
-[INFO: App       ] Sending (60, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 3d 00 00 00 82 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 25 ec 4b be 97 c4 7e 05 02 60 fc 20 40 b2 bc e5 
-[INFO: App       ] Sending (61, 130) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 3e 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): b5 8f 1f bf d9 2d 4e f2 90 7f d7 d7 1d f9 dd 04 
-[INFO: App       ] Sending (62, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 3f 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 26 bd 6a a1 df e0 cb 4a 48 ea 88 ea 6f 78 17 c8 
-[INFO: App       ] Sending (63, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 40 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 7b d1 de 81 e6 fe b6 a7 51 a9 6b 24 96 c0 19 36 
-[INFO: App       ] Sending (64, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 41 00 00 00 7d 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #10 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53467/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929573/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        226/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        442/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): 55 52 9e 7b 28 73 7e 94 79 1a c8 0b 22 62 dd fa 
-[INFO: App       ] Sending (65, 125) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 42 00 00 00 83 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): dc 77 db e7 cf 50 53 d2 9d 60 b5 fe 88 aa fe 40 
-[INFO: App       ] Sending (66, 131) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 43 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 39 14 95 ee ac 5f a5 33 cc 4c 91 9e 2c 25 96 71 
-[INFO: App       ] Sending (67, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 44 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): dc ad 52 57 85 8c b5 69 e5 c4 67 2a 33 05 e6 dd 
-[INFO: App       ] Sending (68, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 45 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): fb 0a af 09 af 83 7b 54 52 b9 f7 2f 5e cf 36 a6 
-[INFO: App       ] Sending (69, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 46 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): c8 83 a2 bd fd 60 fe 71 0b 46 cb b7 81 68 15 a3 
-[INFO: App       ] Sending (70, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 47 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #11 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53320/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929720/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        226/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        442/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): 80 75 f2 4b 7d 2b 24 e8 35 e8 a5 70 19 f5 71 5b 
-[INFO: App       ] Sending (71, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 48 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 31 4c 03 13 ab 62 ed aa 05 e7 07 47 fb d7 b9 73 
-[INFO: App       ] Sending (72, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 49 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 66 35 85 6b 17 3e 51 cb bd 4c e6 56 51 a5 81 7f 
-[INFO: App       ] Sending (73, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 4a 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 5e 18 48 b4 18 b4 2d fa 5c 2b 53 99 9f 2d 7d d9 
-[INFO: App       ] Sending (74, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 4b 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 3e 32 ed 24 00 8e 31 10 66 5c 85 4d e9 fe 0a 83 
-[INFO: App       ] Sending (75, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 4c 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 01 3a 82 3e 37 34 a4 0a ac 3a 61 91 cb 10 2b 01 
-[INFO: App       ] Sending (76, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 4d 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #12 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53315/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929725/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        225/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        441/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): 0d bb d0 bd 81 01 43 b0 07 92 0f 18 06 2f 56 91 
-[INFO: App       ] Sending (77, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 4e 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 37 e6 74 05 6d 7b 9c 1a 12 8f 0c 78 6c 89 f0 45 
-[INFO: App       ] Sending (78, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 4f 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 13 fe 8e 68 2d 90 56 7e ed a3 e5 7b 32 37 e8 7b 
-[INFO: App       ] Sending (79, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 50 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 30 26 6d 58 2b 5d e9 cd d8 98 0d 3c f8 c4 ff d4 
-[INFO: App       ] Sending (80, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 51 00 00 00 7d 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): c9 7a 21 2a a2 bd 54 98 94 18 3d f3 fe b8 90 07 
-[INFO: App       ] Sending (81, 125) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 52 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): da 04 2a 60 7e 55 00 8e 0c 81 56 fe 1d 25 98 ef 
-[INFO: App       ] Sending (82, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 53 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #13 (29 seconds)
-[INFO: Energest  ] Total time  :     983038
-[INFO: Energest  ] CPU         :      53252/    983038 (54 permil)
-[INFO: Energest  ] LPM         :     929786/    983038 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983038 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983038 (0 permil)
-[INFO: Energest  ] Radio Rx    :        227/    983038 (0 permil)
-[INFO: Energest  ] Radio total :        443/    983038 (0 permil)
-[INFO: App       ] packet (encrypted): 8b aa d7 f5 fe 3a e7 f6 ca 51 cb 33 56 45 1a 38 
-[INFO: App       ] Sending (83, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 54 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): ed f2 f7 f4 de 45 3a b2 6c 8f 1e 63 d3 15 65 4a 
-[INFO: App       ] Sending (84, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 55 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): b3 4c 64 03 e4 76 24 19 95 0f a4 7a f8 0b 3a eb 
-[INFO: App       ] Sending (85, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 56 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 40 98 c7 cc a1 b5 1b 1b 3a 9f c4 5d 55 ee 78 09 
-[INFO: App       ] Sending (86, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 57 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 7d 2d 4b 66 ef 5a 72 f7 9a 44 5e 0b 0f 36 3c 34 
-[INFO: App       ] Sending (87, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 58 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): e6 4b 6c 4e f8 29 81 8c 19 fb 03 0c 3c 8c b3 63 
-[INFO: App       ] Sending (88, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 59 00 00 00 83 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #14 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53249/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929791/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        219/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        226/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        445/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): 48 b4 5f 49 32 f7 fd 1b 3b b3 1a e6 bf 92 12 9d 
-[INFO: App       ] Sending (89, 131) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 5a 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 6e fe 82 c3 3a 6d a5 b1 3f 6d 74 78 9b da 51 f4 
-[INFO: App       ] Sending (90, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 5b 00 00 00 7a 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): c0 20 1f d6 58 9e 3e e5 2b 29 0b 1e 11 1f 95 2e 
-[INFO: App       ] Sending (91, 122) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 5c 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 8c 62 99 45 ee 40 9f b8 26 c2 b2 d2 44 27 2d 94 
-[INFO: App       ] Sending (92, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 5d 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 6f a4 cf 31 85 72 f8 75 d1 e2 7e fa b1 9f 3b 2c 
-[INFO: App       ] Sending (93, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 5e 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): c3 10 c7 d2 55 49 d8 6a ac 82 70 31 05 bf a0 2c 
-[INFO: App       ] Sending (94, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 5f 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #15 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53418/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929622/    983040 (945 permil)
+[INFO: Energest  ] CPU         :      54000/    983040 (54 permil)
+[INFO: Energest  ] LPM         :     929040/    983040 (945 permil)
 [INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
 [INFO: Energest  ] Radio Tx    :        218/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        223/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        441/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): fe 9d bb 70 53 dc f4 c0 cb 10 7a 21 fa a0 e2 43 
-[INFO: App       ] Sending (95, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 60 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 72 6c b0 a8 8a 39 8e cc c5 5f c3 0b a1 c2 f4 9e 
-[INFO: App       ] Sending (96, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 61 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 5e 25 00 2e 13 26 aa 68 63 e4 f8 67 52 30 09 5b 
-[INFO: App       ] Sending (97, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 62 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 10 4f 75 b1 93 2c a2 cd b2 fd 06 70 d5 5e 06 d3 
-[INFO: App       ] Sending (98, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 63 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): b1 a6 8f e1 8a 58 14 4c aa fb 6c 61 bc bd 6c ed 
-[INFO: App       ] Sending (99, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 64 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): bb 2a 5c d9 1e 83 96 7a ae 7b 68 81 68 7b bd 88 
-[INFO: App       ] Sending (100, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 65 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #16 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53732/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929308/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        217/    983040 (0 permil)
 [INFO: Energest  ] Radio Rx    :        226/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        443/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): a0 96 35 2f 54 5a c0 ea 25 ce 07 ef e6 33 2a 36 
-[INFO: App       ] Sending (101, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 66 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 96 57 8b b4 e1 33 7b 0f 05 f1 44 d1 c4 87 11 56 
-[INFO: App       ] Sending (102, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 67 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): de 52 e6 5a 30 52 cb 6f 82 c2 f0 f5 05 1b ca 2b 
-[INFO: App       ] Sending (103, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 68 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): ff 1b 6f f2 a1 cd 78 5d 12 5a bb a1 f5 b9 64 0b 
-[INFO: App       ] Sending (104, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 69 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): f5 ee a9 81 87 fb 98 25 65 0d 24 e3 e5 69 5d 48 
-[INFO: App       ] Sending (105, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 6a 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 1a 2d a9 b2 3f 25 7b bc 50 e2 7c f1 5d 54 4a 15 
-[INFO: App       ] Sending (106, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 6b 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #17 (30 seconds)
-[INFO: Energest  ] Total time  :     983042
-[INFO: Energest  ] CPU         :      53469/    983042 (54 permil)
-[INFO: Energest  ] LPM         :     929573/    983042 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983042 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983042 (0 permil)
-[INFO: Energest  ] Radio Rx    :        226/    983042 (0 permil)
-[INFO: Energest  ] Radio total :        442/    983042 (0 permil)
-[INFO: App       ] packet (encrypted): 47 5d 78 46 33 70 30 4e c5 d0 13 12 2b 11 76 05 
-[INFO: App       ] Sending (107, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 6c 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): a1 d8 34 9e 27 d9 5e 34 f1 f2 0f a3 a0 bf 3e 4f 
-[INFO: App       ] Sending (108, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 6d 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): f9 52 db c6 bc 7b 81 21 f5 28 4e fb 34 15 15 8a 
-[INFO: App       ] Sending (109, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 6e 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 11 d5 1b 19 a8 35 e4 ab d3 4d b6 06 48 a1 74 26 
-[INFO: App       ] Sending (110, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 6f 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): ff e2 bf 29 2d 6f a7 32 e2 4b ea 30 8c ea cb 16 
-[INFO: App       ] Sending (111, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 70 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 5a 12 1c e2 42 20 5a 1b ec 9d f5 b9 80 62 a5 b5 
-[INFO: App       ] Sending (112, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 71 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #18 (30 seconds)
+[INFO: Energest  ] Radio total :        444/    983040 (0 permil)
+[INFO: App       ] packet (cleartext) 4: 54 01 00 00 40 01 00 00 37 01 00 00 34 01 00 00 
+[INFO: App       ] packet (encrypted): 1c fe fe 22 76 8c 65 19 55 46 68 81 42 9b 02 f7 
+[INFO: App       ] Sending (11, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 4e 01 00 00 4c 01 00 00 4c 01 00 00 4e 01 00 00 
+[INFO: App       ] packet (encrypted): c5 fa 3f ea be ce 0f 5f a7 78 be 98 60 26 87 77 
+[INFO: App       ] Sending (12, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 54 01 00 00 55 01 00 00 54 01 00 00 54 01 00 00 
+[INFO: App       ] packet (encrypted): 9b b0 fa 8b dd 93 e4 8d 3f 10 39 dd 53 4c 6e e7 
+[INFO: App       ] Sending (13, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 54 01 00 00 55 01 00 00 51 01 00 00 52 01 00 00 
+[INFO: App       ] packet (encrypted): 35 0f bc 30 db 33 5d 32 1d 25 ee e0 34 97 94 c0 
+[INFO: App       ] Sending (14, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 54 01 00 00 52 01 00 00 54 01 00 00 54 01 00 00 
+[INFO: App       ] packet (encrypted): 60 70 1b 51 e7 fc 35 6f 34 52 1f 9e 8e f6 38 0b 
+[INFO: App       ] Sending (15, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 56 01 00 00 51 01 00 00 4f 01 00 00 4f 01 00 00 
+[INFO: App       ] packet (encrypted): cd c1 1c f5 79 d0 1e 64 73 79 f4 93 c7 97 b6 06 
+[INFO: App       ] Sending (16, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: Energest  ] --- Period summary #2 (30 seconds)
 [INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53960/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929080/    983040 (945 permil)
+[INFO: Energest  ] CPU         :      53371/    983040 (54 permil)
+[INFO: Energest  ] LPM         :     929669/    983040 (945 permil)
 [INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        226/    983040 (0 permil)
-[INFO: Energest  ] Radio total :        442/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): 83 63 c7 4f 51 77 9e 87 b2 4a a1 ff 55 98 67 29 
-[INFO: App       ] Sending (113, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 72 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): ec ef f2 b1 e6 c6 b1 f0 fa 0c 4a b8 4c fd cf 46 
-[INFO: App       ] Sending (114, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 73 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 5e 4b ec 5e f4 cb bb 98 3d f4 fd 80 ea 30 66 04 
-[INFO: App       ] Sending (115, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 74 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): b6 bb aa af 36 97 e1 9f f4 f4 d5 0f fa 3a 62 8a 
-[INFO: App       ] Sending (116, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 75 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): f7 4c 9e d3 b4 54 7e 95 60 4a a1 7a ad 64 1a 10 
-[INFO: App       ] Sending (117, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 76 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): a6 73 b5 fb cf eb 16 ef 34 81 bc ca 62 c9 ae 37 
-[INFO: App       ] Sending (118, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 77 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #19 (29 seconds)
-[INFO: Energest  ] Total time  :     983039
-[INFO: Energest  ] CPU         :      53318/    983039 (54 permil)
-[INFO: Energest  ] LPM         :     929721/    983039 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983039 (0 permil)
-[INFO: Energest  ] Radio Tx    :        220/    983039 (0 permil)
-[INFO: Energest  ] Radio Rx    :        225/    983039 (0 permil)
-[INFO: Energest  ] Radio total :        445/    983039 (0 permil)
-[INFO: App       ] packet (encrypted): 81 d3 d1 14 00 b0 4d ba dd 57 fa e9 89 04 54 11 
-[INFO: App       ] Sending (119, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 78 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 44 94 25 f0 6a 5c a9 7d 4a 44 84 27 b1 7e c7 15 
-[INFO: App       ] Sending (120, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 79 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): af 1c 5d 16 c1 81 7e 60 f5 9c 23 b2 f3 51 01 71 
-[INFO: App       ] Sending (121, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 7a 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 7c 5f 76 10 26 64 ac f4 52 c7 e2 0b b1 7e c4 b2 
-[INFO: App       ] Sending (122, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 7b 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): e9 27 e8 30 0b 92 12 c0 85 f7 5a de 1b a1 18 7a 
-[INFO: App       ] Sending (123, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 7c 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): cf dd aa c3 38 d6 e5 2b 96 14 55 88 62 ec 10 36 
-[INFO: App       ] Sending (124, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 7d 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #20 (29 seconds)
-[INFO: Energest  ] Total time  :     983039
-[INFO: Energest  ] CPU         :      53442/    983039 (54 permil)
-[INFO: Energest  ] LPM         :     929597/    983039 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983039 (0 permil)
-[INFO: Energest  ] Radio Tx    :        218/    983039 (0 permil)
-[INFO: Energest  ] Radio Rx    :        224/    983039 (0 permil)
-[INFO: Energest  ] Radio total :        442/    983039 (0 permil)
-[INFO: App       ] packet (encrypted): 1a 7d 98 e9 1a 8f 5b 16 ea 5e ab 9f 03 36 30 27 
-[INFO: App       ] Sending (125, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 7e 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 00 8e 07 37 22 a2 e3 cd 56 bb 88 26 d0 ee 30 72 
-[INFO: App       ] Sending (126, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 7f 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): d7 8b 9c 59 61 ed cb 72 12 b9 09 cf d6 29 fe 38 
-[INFO: App       ] Sending (127, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 80 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 0b 37 c3 89 34 73 c2 06 51 e8 62 f6 e6 5f 49 2b 
-[INFO: App       ] Sending (128, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 81 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 4c 19 5c e5 8d 31 50 2c fa 63 29 46 9b 74 03 01 
-[INFO: App       ] Sending (129, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 82 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 00 1b dd aa 6d 8a c5 12 ee c7 55 4a 29 2b 18 83 
-[INFO: App       ] Sending (130, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 83 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #21 (30 seconds)
-[INFO: Energest  ] Total time  :     983040
-[INFO: Energest  ] CPU         :      53460/    983040 (54 permil)
-[INFO: Energest  ] LPM         :     929580/    983040 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
-[INFO: Energest  ] Radio Tx    :        221/    983040 (0 permil)
-[INFO: Energest  ] Radio Rx    :        225/    983040 (0 permil)
+[INFO: Energest  ] Radio Tx    :        218/    983040 (0 permil)
+[INFO: Energest  ] Radio Rx    :        228/    983040 (0 permil)
 [INFO: Energest  ] Radio total :        446/    983040 (0 permil)
-[INFO: App       ] packet (encrypted): f8 69 09 d1 90 6b ce 41 fb 04 6f a0 92 32 22 be 
-[INFO: App       ] Sending (131, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 84 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): a7 2b 24 eb 9b 0e 99 b9 03 94 ba 14 6d 3c 64 15 
-[INFO: App       ] Sending (132, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 85 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 43 7b 97 b8 d5 df 5b d3 df 25 12 e6 fb 81 fb 78 
-[INFO: App       ] Sending (133, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 86 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): de c3 b3 bf 75 89 33 8f c7 69 5f cd cb d0 8a b3 
-[INFO: App       ] Sending (134, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 87 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 6c 36 f8 cf 97 1b f2 1b ec 9f 5e 90 67 96 1f 8d 
-[INFO: App       ] Sending (135, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 88 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 83 40 d4 4f c8 4c f9 a5 bc 8b c9 44 87 ec 6a 7d 
-[INFO: App       ] Sending (136, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 89 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: Energest  ] --- Period summary #22 (30 seconds)
-[INFO: Energest  ] Total time  :     983041
-[INFO: Energest  ] CPU         :      53296/    983041 (54 permil)
-[INFO: Energest  ] LPM         :     929745/    983041 (945 permil)
-[INFO: Energest  ] Deep LPM    :          0/    983041 (0 permil)
-[INFO: Energest  ] Radio Tx    :        216/    983041 (0 permil)
-[INFO: Energest  ] Radio Rx    :        223/    983041 (0 permil)
-[INFO: Energest  ] Radio total :        439/    983041 (0 permil)
-[INFO: App       ] packet (encrypted): c7 19 a2 25 3d 4f 16 22 a0 07 d4 47 7b 07 48 66 
-[INFO: App       ] Sending (137, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 8a 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): e7 12 db 3c 0c b8 7a 35 e5 fa ea 45 22 e3 28 a6 
-[INFO: App       ] Sending (138, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 8b 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 49 27 22 b4 1f 71 32 1f 59 e1 7b 80 47 87 84 bd 
-[INFO: App       ] Sending (139, 127) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 8c 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): b0 85 e3 37 f0 ca 08 e4 04 46 bf 36 aa 49 b3 e0 
-[INFO: App       ] Sending (140, 128) encrypted with AES 128 key, as nullnet BROADCAST
-[INFO: App       ] packet (cleartext): 8d 00 00 00 7f 00 00 00 00 00 00 00 00 00 00 00 
-[INFO: App       ] packet (encrypted): 42 f7 ed 73 ea 13 a4 74 b8 0c 7d 1c f4 09 92 8c 
-[INFO: App       ] Sending (141, 127) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 4c 01 00 00 4a 01 00 00 4f 01 00 00 4e 01 00 00 
+[INFO: App       ] packet (encrypted): 63 3b 6b 93 71 1a ae 5d b0 9c 35 71 45 2d f3 6a 
+[INFO: App       ] Sending (17, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 3a 01 00 00 48 01 00 00 4f 01 00 00 56 01 00 00 
+[INFO: App       ] packet (encrypted): 32 a0 c4 1b 11 d2 e6 7a 81 cc 9a 15 7d 64 ec 95 
+[INFO: App       ] Sending (18, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 3e 01 00 00 47 01 00 00 44 01 00 00 47 01 00 00 
+[INFO: App       ] packet (encrypted): ca 93 7f c1 1d 87 31 cf b2 1b ea 1f b6 3a b0 c1 
+[INFO: App       ] Sending (19, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 56 01 00 00 44 01 00 00 44 01 00 00 45 01 00 00 
+[INFO: App       ] packet (encrypted): 1e fa 26 82 dd 23 7e 5c c3 01 df 95 ee ff b8 63 
+[INFO: App       ] Sending (20, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 54 01 00 00 54 01 00 00 55 01 00 00 44 01 00 00 
+[INFO: App       ] packet (encrypted): f3 bf 0d 68 df 95 60 e2 ab a8 90 c9 51 05 1c af 
+[INFO: App       ] Sending (21, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: App       ] packet (cleartext) 4: 56 01 00 00 4f 01 00 00 4f 01 00 00 4f 01 00 00 
+[INFO: App       ] packet (encrypted): 3f 0f f4 82 2f e3 d9 40 47 ee e1 bb 1b 29 fe 39 
+[INFO: App       ] Sending (22, 0) encrypted with AES 128 key, as nullnet BROADCAST
+[INFO: Energest  ] --- Period summary #3 (30 seconds)
+[INFO: Energest  ] Total time  :     983040
+[INFO: Energest  ] CPU         :      53673/    983040 (54 permil)
+[INFO: Energest  ] LPM         :     929367/    983040 (945 permil)
+[INFO: Energest  ] Deep LPM    :          0/    983040 (0 permil)
+[INFO: Energest  ] Radio Tx    :        219/    983040 (0 permil)
+[INFO: Energest  ] Radio Rx    :        227/    983040 (0 permil)
+[INFO: Energest  ] Radio total :        446/    983040 (0 permil)
+[INFO: App       ] packet (cleartext) 4: 4c 01 00 00 4c 01 00 00 3e 01 00 00 3e 01 00 00 
+[INFO: App       ] packet (encrypted): 0a 68 22 af 99 14 8d 3d 51 47 65 91 47 d0 fb 73 
+[INFO: App       ] Sending (23, 0) encrypted with AES 128 key, as nullnet BROADCAST

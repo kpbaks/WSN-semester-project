@@ -7,7 +7,7 @@
 #include "net/netstack.h"
 #include "net/nullnet/nullnet.h"
 
-#include "dev/leds.h" 
+#include "dev/leds.h"
 #include "dev/light-sensor.h"
 
 #include <string.h> // for memcpy, memset
@@ -17,14 +17,14 @@
 #define LIGHT_SENSOR_READ_INTERVAL (CLOCK_SECOND * 0.25)
 
 static uint32_t get_light() {
-	return 10 * light_sensor.value(LIGHT_SENSOR_PHOTOSYNTHETIC) / 7;
+  return 10 * light_sensor.value(LIGHT_SENSOR_PHOTOSYNTHETIC) / 7;
 }
 
 static void print_aes_block_as_hex(uint8_t *block) {
-	for (int i = 0; i < AES_128_BLOCK_LENGTH; i++) {
-		LOG_INFO_("%02x ", block[i]);
-	}
-	LOG_INFO_("\n");
+  for (int i = 0; i < AES_128_BLOCK_LENGTH; i++) {
+    LOG_INFO_("%02x ", block[i]);
+  }
+  LOG_INFO_("\n");
 }
 
 // Encode 8 bits of data into 2 (8,4) hamming codes concatenated
@@ -34,13 +34,13 @@ static void print_aes_block_as_hex(uint8_t *block) {
 // stored in the lower 8 bits of the output word.
 uint16_t hamming_8_4_encode(uint8_t byte) {
 
-	// lookup table for (8,4) hamming code
-	// 4 data bits -> 8 hamming code bits
-	// (d1,d2,d3,d4) -> (p1,p2,d1,p3,d2,d3,d4,p4)
-	// the 0th is used for error detection, and is the parity of the encoded byte
-	// the 1st is used for error correction, and is the parity of
-	//
-	// clang-format off
+  // lookup table for (8,4) hamming code
+  // 4 data bits -> 8 hamming code bits
+  // (d1,d2,d3,d4) -> (p1,p2,d1,p3,d2,d3,d4,p4)
+  // the 0th is used for error detection, and is the parity of the encoded byte
+  // the 1st is used for error correction, and is the parity of
+  //
+  // clang-format off
 	static const uint8_t hamming_8_4_encode_lut[16] = {
 		0b00000000, // 0b0000 [0]
 		0b11010010, // 0b0001 [1]
@@ -59,25 +59,25 @@ uint16_t hamming_8_4_encode(uint8_t byte) {
 		0b00101101, // 0b1110 [14]
 		0b11111111, // 0b1111 [15]
 	};
-	// clang-format on
+  // clang-format on
 
-	const uint8_t upper4 = byte & 0xf0;
-	const uint8_t lower4 = byte & 0x0f;
+  const uint8_t upper4 = byte & 0xf0;
+  const uint8_t lower4 = byte & 0x0f;
 
-	const uint8_t upper4_encoded = hamming_8_4_encode_lut[upper4 >> 4];
-	const uint8_t lower4_encoded = hamming_8_4_encode_lut[lower4];
+  const uint8_t upper4_encoded = hamming_8_4_encode_lut[upper4 >> 4];
+  const uint8_t lower4_encoded = hamming_8_4_encode_lut[lower4];
 
-	const uint16_t encoded =
-		((uint16_t)upper4_encoded << 8) | (uint16_t)lower4_encoded;
-	return encoded;
+  const uint16_t encoded =
+      ((uint16_t)upper4_encoded << 8) | (uint16_t)lower4_encoded;
+  return encoded;
 }
 
 void encode_128_bit_aes_block_with_8_4_hamming_code(const uint8_t *data,
-													uint16_t *hamming_code) {
-	for (int i = 0; i < 16; i++) {
-		const uint16_t encoded = hamming_8_4_encode(data[i]);
-		hamming_code[i] = encoded;
-	}
+                                                    uint16_t *hamming_code) {
+  for (int i = 0; i < 16; i++) {
+    const uint16_t encoded = hamming_8_4_encode(data[i]);
+    hamming_code[i] = encoded;
+  }
 }
 
 PROCESS(main_process, "main_process");
@@ -86,72 +86,76 @@ AUTOSTART_PROCESSES(&main_process);
 
 PROCESS_THREAD(main_process, ev, data) {
 
-	static struct etimer periodic_timer;
-	static struct etimer light_sample_rate_periodic_timer;
-	static uint32_t count = 0;
-	static uint32_t light = 0;
-	static uint8_t encrypted[16] = {0};
+  static struct etimer periodic_timer;
+  static struct etimer light_sample_rate_periodic_timer;
+  static uint32_t count = 0;
+  static uint32_t light = 0;
+  static uint8_t encrypted[16] = {0};
 
-	static const uint8_t key[16] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-		0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10};
+  static const uint8_t key[16] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+                                  0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
+                                  0x0d, 0x0e, 0x0f, 0x10};
 
-	PROCESS_BEGIN();
+  PROCESS_BEGIN();
 
-	SENSORS_ACTIVATE(light_sensor);
+  SENSORS_ACTIVATE(light_sensor);
 
-	etimer_set(&periodic_timer, SEND_INTERVAL);
-	etimer_set(&light_sample_rate_periodic_timer, LIGHT_SENSOR_READ_INTERVAL);
+  etimer_set(&periodic_timer, SEND_INTERVAL);
+  etimer_set(&light_sample_rate_periodic_timer, LIGHT_SENSOR_READ_INTERVAL);
 
-	AES_128.set_key(key);
+  AES_128.set_key(key);
 
-	// We reuse the same buffer for the encrypted data to be sent
-	// As the size of the data is 16 bytes, we can use the same buffer.
-	nullnet_buf = (uint8_t *) &encrypted;
-	nullnet_len = sizeof(encrypted);
+  // We reuse the same buffer for the encrypted data to be sent
+  // As the size of the data is 16 bytes, we can use the same buffer.
+  nullnet_buf = (uint8_t *)&encrypted;
+  nullnet_len = sizeof(encrypted);
 
-	while (1) {
-		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+  while (1) {
+    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
 
-		memset (encrypted, 0, sizeof(encrypted));
+    memset(encrypted, 0, sizeof(encrypted));
 
-		static int i = 0;
-		i = 1;
-		i -= 1;
-		for (i = 0; i < 4; i++) {
-			etimer_reset(&light_sample_rate_periodic_timer);
-			uint32_t measured_light = get_light();
-			// LOG_INFO("Light: %lu ", measured_light);
-			PROCESS_PAUSE(); // yield to other processes
-			memcpy(encrypted + (i * sizeof(uint32_t)), &measured_light, sizeof(uint32_t));
-			PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&light_sample_rate_periodic_timer));
-		}
+    static int i = 0;
+    i = 1;
+    i -= 1;
+    for (i = 0; i < 4; i++) {
+      etimer_reset(&light_sample_rate_periodic_timer);
+      uint32_t measured_light = get_light();
+      // LOG_INFO("Light: %lu ", measured_light);
+      // PROCESS_PAUSE(); // yield to other processes
+      memcpy(encrypted + (i * sizeof(uint32_t)), &measured_light,
+             sizeof(uint32_t));
+      PROCESS_WAIT_EVENT_UNTIL(
+          etimer_expired(&light_sample_rate_periodic_timer));
+    }
 
-		LOG_INFO_("\n");
+    LOG_INFO_("\n");
 
-		LOG_INFO("packet (cleartext) %d: ", i);
-		print_aes_block_as_hex(encrypted);
-		AES_128.encrypt(encrypted);
-		PROCESS_PAUSE(); // yield to other processes
+    LOG_INFO("packet (cleartext) %d: ", i);
+    print_aes_block_as_hex(encrypted);
+    AES_128.encrypt(encrypted);
+    PROCESS_PAUSE(); // yield to other processes
 
-		LOG_INFO("packet (encrypted): ");
-		print_aes_block_as_hex(encrypted);
-		PROCESS_PAUSE(); // yield to other processes
+    LOG_INFO("packet (encrypted): ");
+    print_aes_block_as_hex(encrypted);
+    PROCESS_PAUSE(); // yield to other processes
 
-		LOG_INFO("Sending (%u, %u) encrypted with AES 128 key, as nullnet BROADCAST\n", (unsigned int) count, (unsigned int) light);
+    LOG_INFO(
+        "Sending (%u, %u) encrypted with AES 128 key, as nullnet BROADCAST\n",
+        (unsigned int)count, (unsigned int)light);
 
-		// For this project, this process is acting only as a source of data
-		// and does not need to receive any data
-		// Therefore, we turn off the radio to save power,
-		// and turn it back on when we need to send data.
-		// This should give us a more accurate power consumption measurement.
-		NETSTACK_RADIO.on();
-		NETSTACK_NETWORK.output(NULL); // send as broadcast
-		NETSTACK_RADIO.off();
+    // For this project, this process is acting only as a source of data
+    // and does not need to receive any data
+    // Therefore, we turn off the radio to save power,
+    // and turn it back on when we need to send data.
+    // This should give us a more accurate power consumption measurement.
+    NETSTACK_RADIO.on();
+    NETSTACK_NETWORK.output(NULL); // send as broadcast
+    NETSTACK_RADIO.off();
 
-		count += 1;
-		etimer_reset(&periodic_timer);
-	}
+    count += 1;
+    etimer_reset(&periodic_timer);
+  }
 
-	PROCESS_END();
+  PROCESS_END();
 }
-

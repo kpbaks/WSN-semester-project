@@ -10,19 +10,21 @@ from dataclasses import dataclass
 import re
 from typing import List, Optional
 
-
-RTIMER_ARCH_SECOND = 32768
-VOLTAGE = 3.0 # assume 3 volts battery
+# contiki-ng/arch/cpu/msp430/rtimer-arch.h:45
+RTIMER_ARCH_SECOND = 4096 * 8 # 32768
+VOLTAGE = 3.0 # assume 3 volts battery (2 AA batteries)
 
 # TODO: find datasheet for our board and update these values
 # From Z1 node datasheet
 CURRENT_MA = {
-        "LPM" : 0.0001,
-        "CPU" : 0.0001,
-        "Radio Tx" : 17.0,
-        "Radio Rx" : 17.0,
-        "Deep LPM" : 0.0001,
-    }
+    "LPM" : 0.026, # mA
+    "CPU" : 0.1, # mA (MADE UP NUMBER!)
+    "Radio Tx" : 23.0, # mA
+    "Radio Rx" : 21.0, # mA
+    "Deep LPM" : 0.0001, # mA
+}
+
+
 
 STATES = CURRENT_MA.keys()
 

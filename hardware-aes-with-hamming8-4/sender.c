@@ -15,17 +15,19 @@
 
 #define AES_128_BLOCK_LENGTH 16 // 128 bits
 #define SEND_INTERVAL (CLOCK_SECOND * 5)
+#define LIGHT_SENSOR_READ_INTERVAL (CLOCK_SECOND * 0.25)
+
 
 static uint32_t get_light() {
 	return 10 * light_sensor.value(LIGHT_SENSOR_PHOTOSYNTHETIC) / 7;
 }
 
-static void print_aes_block_as_hex(uint8_t *block) {
-	for (int i = 0; i < AES_128_BLOCK_LENGTH; i++) {
-		LOG_INFO_("%02x ", block[i]);
-	}
-	LOG_INFO_("\n");
-}
+// static void print_aes_block_as_hex(uint8_t *block) {
+// 	for (int i = 0; i < AES_128_BLOCK_LENGTH; i++) {
+// 		LOG_INFO_("%02x ", block[i]);
+// 	}
+// 	LOG_INFO_("\n");
+// }
 
 
 
@@ -90,9 +92,12 @@ AUTOSTART_PROCESSES(&main_process);
 PROCESS_THREAD(main_process, ev, data) {
 
 	static struct etimer periodic_timer;
+  static struct etimer light_sample_rate_periodic_timer;
+
 	static uint32_t count = 0;
-	static uint32_t light = 0;
+	// static uint32_t light = 0;
 	static uint8_t encrypted[16] = {0};
+	static uint16_t hamming_encoded[16] = {0};
 	// static clock_time_t t_total = 0;
 	// static clock_time_t t_start = 0;
 	// static clock_time_t t_end = 0;
@@ -107,28 +112,37 @@ PROCESS_THREAD(main_process, ev, data) {
 
 	// Set the timer to 10 seconds
 	etimer_set(&periodic_timer, SEND_INTERVAL);
+  etimer_set(&light_sample_rate_periodic_timer, LIGHT_SENSOR_READ_INTERVAL);
+
 
 	AES_128.set_key(key);
 
 	// We reuse the same buffer for the encrypted data to be sent
 	// As the size of the data is 16 bytes, we can use the same buffer.
-	nullnet_buf = (uint8_t *) &encrypted;
-	nullnet_len = sizeof(encrypted);
+	nullnet_buf = (uint8_t *) &hamming_encoded;
+	nullnet_len = sizeof(hamming_encoded);
 
 	while (1) {
 		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
 		// get the time right now
 		// t_start = clock_time();
 
+	    memset(encrypted, 0, sizeof(encrypted));
+
+
 		static int i = 0;
 		i = 1;
 		i -= 1;
 		for (i = 0; i < 4; i++) {
+      etimer_reset(&light_sample_rate_periodic_timer);
+
 			uint32_t light = get_light();
 			uint8_t offset = i * 4;
 
 			memcpy(encrypted + offset, &light, sizeof(uint32_t));
-			PROCESS_PAUSE(); // yield to other processes
+			// PROCESS_PAUSE(); // yield to other processes
+			  PROCESS_WAIT_EVENT_UNTIL(
+          etimer_expired(&light_sample_rate_periodic_timer));
 		}
 
 		// The last 8 bytes, are empty, as the the aes block size is 16 bytes
@@ -137,14 +151,17 @@ PROCESS_THREAD(main_process, ev, data) {
 		// memcpy(encrypted, &count, sizeof(count));
 		// memcpy(encrypted + sizeof(count), &light, sizeof(light));
 
-		LOG_INFO("packet (cleartext) %d: ", i);
-		print_aes_block_as_hex(encrypted);
+		// LOG_INFO("packet (cleartext) %d: ", i);
+		// print_aes_block_as_hex(encrypted);
 		AES_128.encrypt(encrypted);
+		encode_128_bit_aes_block_with_8_4_hamming_code(encrypted, hamming_encoded);
+
+
 		PROCESS_PAUSE(); // yield to other processes
 
-		LOG_INFO("packet (encrypted): ");
-		print_aes_block_as_hex(encrypted);
-		PROCESS_PAUSE(); // yield to other processes
+		// LOG_INFO("packet (encrypted): ");
+		// print_aes_block_as_hex(encrypted);
+		// PROCESS_PAUSE(); // yield to other processes
 		// contiki-ng and the cc2420 driver, does not have functionality to
 		// decrypt the packets, so we can't check if the decryption is correct.
 		// Decryption is instead done in a python script, see the README.md
@@ -163,7 +180,7 @@ PROCESS_THREAD(main_process, ev, data) {
 		// LOG_INFO("dt: %lu\n", dt);
 
 		// LOG_INFO("Sending (%u, %u) encrypted with AES 128 key, as nullnet BROADCAST. Time passed %lu\n", (unsigned int) count, (unsigned int) light,  t_total);
-		LOG_INFO("Sending (%u, %u) encrypted with AES 128 key, as nullnet BROADCAST\n", (unsigned int) count, (unsigned int) light  );
+		// LOG_INFO("Sending (%u, %u) encrypted with AES 128 key, as nullnet BROADCAST\n", (unsigned int) count, (unsigned int) light  );
 
 		// For this project, this process is acting only as a source of data
 		// and does not need to receive any data

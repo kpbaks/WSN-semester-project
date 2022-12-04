@@ -11,14 +11,28 @@ import re
 from typing import List, Optional
 
 # contiki-ng/arch/cpu/msp430/rtimer-arch.h:45
-RTIMER_ARCH_SECOND = 4096 * 8 # 32768
+RTIMER_ARCH_SECOND = 4096 * 8 # 32768 ticks
+
+
+
 VOLTAGE = 3.0 # assume 3 volts battery (2 AA batteries)
 
 # TODO: find datasheet for our board and update these values
 # From Z1 node datasheet
+
+
+
+# low power mode (LPM) 
+# - CPU is off, but the MCU is still running
 CURRENT_MA = {
     "LPM" : 0.026, # mA
-    "CPU" : 0.1, # mA (MADE UP NUMBER!)
+    # "CPU" : 0.1, # mA (MADE UP NUMBER!)
+    # ../datasheets/msp430fr5969.pdf (page 26) it says that 
+    # active mode is 500 uA operating at 3V at 1MHz
+    # on https://docs.contiki-ng.org/en/develop/doc/platforms/sky.html
+    # is says that the TelosB runs at 8MHz, so 500 uA * 8 = 4mA
+    # although this is a "naive" calculation, it seems to be a good approximation
+    'CPU': 500 * 8 / 1000, # 4 mA
     "Radio Tx" : 23.0, # mA
     "Radio Rx" : 21.0, # mA
     "Deep LPM" : 0.0001, # mA

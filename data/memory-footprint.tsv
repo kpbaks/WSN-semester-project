@@ -1,0 +1,6 @@
+"id","configuration","bytes flashed","cost in bytes"
+1,no-aes-no-hamming,18821,18821
+2,software-aes-no-hamming,21556,2735
+3,hardware-aes-no-hamming,20614,1793
+4,sofware-aes-and-hamming,21634,78
+5,hardware-aes-hamming,20692,78

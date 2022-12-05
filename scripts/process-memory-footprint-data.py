@@ -112,6 +112,7 @@ plt.xticks(xticks, [f'{int(x/kB)} kB' for x in xticks])
 # plt.legend(fancybox=False, shadow=True, ncol=5)
 plt.legend()
 plt.tight_layout()
+plt.savefig('../charts/horizontal_bar_chart_of_memory_usage.png', dpi=300)
 plt.show()
 
 #%%
@@ -130,6 +131,8 @@ sizes = [
 ]
 
 
+shadow = False
+
 # complementary pastel colors
 ptgreen = '#b3e2cd'
 ptblue = '#a6cee3'
@@ -139,7 +142,7 @@ ptorange = '#f4cae4'
 ptbrown = '#e6f5c9'
 ptgray = '#f5f5f5'
 
-ax0.pie(sizes, explode=explode, autopct='%1.1f%%', shadow=True, startangle=90)
+ax0.pie(sizes, explode=explode, autopct='%1.1f%%', shadow=shadow, startangle=90)
 ax0.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 ax0.legend(labels)
 
@@ -153,11 +156,13 @@ sizes = [
     MAX_FLASH_MEMORY - bytes_flashed['with_hardware_aes_and_8_4_hamming']
 ]
 
-ax1.pie(sizes, explode=explode,  autopct='%1.1f%%', shadow=True, startangle=90)
+ax1.pie(sizes, explode=explode,  autopct='%1.1f%%', shadow=shadow, startangle=90)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 ax1.legend(labels)
 
 fig.suptitle('Flash Memory Usage (48 kB)', fontsize=16)
 
 plt.tight_layout()
+plt.savefig('../charts/pie_chart_of_memory_usage.png', dpi=300)
+
 plt.show()

@@ -90,7 +90,7 @@ mAhs0 = mAhs[0]
 # calculate the percentage of the current draw of each configuration compared to the base configuration
 mAhs = [(mAh - mAhs0) / mAhs0 * 100.0 for mAh in mAhs]
 
-plt.barh(labels, mAhs[1:], color=hex_codes)
+plt.barh(labels, mAhs[1:], color=hex_codes[1:5])
 plt.xlabel('percentage of current draw compared to base configuration')
 plt.ylabel('configuration')
 plt.title('Percentage of current draw of different configurations')
@@ -98,3 +98,31 @@ plt.savefig('../charts/percentage-current-draw-each-configuration.pdf', format='
 plt.savefig('../charts/percentage-current-draw-each-configuration.png', dpi=300)
 
 plt.show()
+
+
+#%%
+
+
+indices = [i for i in range(128)]
+
+
+# 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120
+# 1, 9, 17, 25, 33, 41, 49, 57, 65, 73, 81, 89, 97, 105, 113, 121
+# 2, 10, 18, 26, 34, 42, 50, 58, 66, 74, 82, 90, 98, 106, 114, 122
+# 3, 11, 19, 27, 35, 43, 51, 59, 67, 75, 83, 91, 99, 107, 115, 123
+# 4, 12, 20, 28, 36, 44, 52, 60, 68, 76, 84, 92, 100, 108, 116, 124
+# 5, 13, 21, 29, 37, 45, 53, 61, 69, 77, 85, 93, 101, 109, 117, 125
+# 6, 14, 22, 30, 38, 46, 54, 62, 70, 78, 86, 94, 102, 110, 118, 126
+# 7, 15, 23, 31, 39, 47, 55, 63, 71, 79, 87, 95, 103, 111, 119, 127
+
+
+
+
+
+
+
+
+# interleave the indices
+indices_interleaved = [indices[i] for i in range(0, len(indices), 2)] + [indices[i] for i in range(1, len(indices), 2)]
+
+

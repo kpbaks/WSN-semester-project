@@ -120,6 +120,7 @@ def parse_summary(summary: List[str]) -> Optional[EnergestSummary]:
 class Report:
     summary: EnergestSummary
     total_charge_mC: float
+    total_current_mA: float
     total_charge_mAh: float
     total_energy_mJ: float
 
@@ -183,9 +184,9 @@ if __name__ == '__main__':
 
         current_cpu_mA = summary.cpu * CURRENT_MA['CPU'] / period_ticks
         current_lpm_mA = summary.lpm * CURRENT_MA['LPM'] / period_ticks
-        current_deep_lpm_mA = summary.deep_lpm * CURRENT_MA['DEEP LPM'] / period_ticks
-        current_radio_tx_mA = summary.radio_tx * CURRENT_MA['RADIO Tx'] / period_ticks
-        current_radio_rx_mA = summary.radio_rx * CURRENT_MA['RADIO Rx'] / period_ticks
+        current_deep_lpm_mA = summary.deep_lpm * CURRENT_MA['Deep LPM'] / period_ticks
+        current_radio_tx_mA = summary.radio_tx * CURRENT_MA['Radio Tx'] / period_ticks
+        current_radio_rx_mA = summary.radio_rx * CURRENT_MA['Radio Rx'] / period_ticks
 
         total_avg_current_mA = current_cpu_mA + current_lpm_mA + current_deep_lpm_mA + current_radio_tx_mA + current_radio_rx_mA
 
@@ -195,21 +196,22 @@ if __name__ == '__main__':
         # total_avg_current_mA += summary.radio_tx * CURRENT_MA['Radio Tx'] / period_ticks
         # total_avg_current_mA += summary.radio_rx * CURRENT_MA['Radio Rx'] / period_ticks
 
+        
         total_charge_mC = period_sec * total_avg_current_mA
         total_charge_mAh = total_charge_mC / 3600
         total_energy_mJ = total_charge_mC * VOLTAGE
         
-        reports.append(Report(summary, total_charge_mC, total_charge_mAh=total_charge_mAh, total_energy_mJ=total_energy_mJ))
+        reports.append(Report(summary, total_charge_mC, total_current_mA=total_avg_current_mA, total_charge_mAh=total_charge_mAh, total_energy_mJ=total_energy_mJ))
 
 
 
     if args.json:
         print(to_json(reports, indent=4))
     elif args.csv:
-        print("summary_id,cpu,lpm,deep_lpm,radio_tx,radio_rx,radio_total,total_time,total_charge_mC,total_charge_mAh,total_energy_mJ")
+        print("summary_id,cpu,lpm,deep_lpm,radio_tx,radio_rx,radio_total,total_time,total_charge_mC,total_charge_mAh,total_energy_mJ,total_current_mA")
 
         for report in reports:
-            print(f"{report.summary.summary_id},{report.summary.cpu},{report.summary.lpm},{report.summary.deep_lpm},{report.summary.radio_tx},{report.summary.radio_rx},{report.summary.radio_total},{report.summary.total_time},{report.total_charge_mC},{report.total_charge_mAh},{report.total_energy_mJ}")
+            print(f"{report.summary.summary_id},{report.summary.cpu},{report.summary.lpm},{report.summary.deep_lpm},{report.summary.radio_tx},{report.summary.radio_rx},{report.summary.radio_total},{report.summary.total_time},{report.total_charge_mC},{report.total_charge_mAh},{report.total_energy_mJ},{report.total_current_mA}")
     else:
         for report in reports:
             summary = report.summary

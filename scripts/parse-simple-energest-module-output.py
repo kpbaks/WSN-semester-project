@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import json
 import sys
 import argparse
 import os
@@ -13,32 +12,20 @@ from typing import List, Optional
 # contiki-ng/arch/cpu/msp430/rtimer-arch.h:45
 RTIMER_ARCH_SECOND = 4096 * 8 # 32768 ticks
 
-
-
 VOLTAGE = 3.0 # assume 3 volts battery (2 AA batteries)
 
-# TODO: find datasheet for our board and update these values
-# From Z1 node datasheet
-
-
-
 # low power mode (LPM) 
+# deep low power mode (Deep LPM)
+# radio transmit (Radio Tx)
+# radio receive (Radio Rx)
 # - CPU is off, but the MCU is still running
 CURRENT_MA = {
-    "LPM" : 0.026, # mA
-    # "CPU" : 0.1, # mA (MADE UP NUMBER!)
-    # ../datasheets/msp430fr5969.pdf (page 26) it says that 
-    # active mode is 500 uA operating at 3V at 1MHz
-    # on https://docs.contiki-ng.org/en/develop/doc/platforms/sky.html
-    # is says that the TelosB runs at 8MHz, so 500 uA * 8 = 4mA
-    # although this is a "naive" calculation, it seems to be a good approximation
-    'CPU': 500 * 8 / 1000, # 4 mA
-    "Radio Tx" : 23.0, # mA
-    "Radio Rx" : 21.0, # mA
-    "Deep LPM" : 0.0001, # mA
+    "LPM" : (5.1 + 21) / 10**3, # mA  /datasheets/CPU_LPM_DLPM.png
+    "Deep LPM" : (5.1 + 1) / 10**3, # mA see ../datasheets/CPU_LPM_DLPM.png
+    'CPU': 1.8, # mA see ../datasheets/CPU_LPM_DLPM.png
+    "Radio Tx" : 17.4, # mA see ../datasheets/Radio_Rx_Radio_Tx_params.png
+    "Radio Rx" : 18.4, # mA see ../datasheets/Radio_Rx_Radio_Tx_params.png
 }
-
-
 
 STATES = CURRENT_MA.keys()
 
@@ -47,14 +34,14 @@ STATES = CURRENT_MA.keys()
 
 # permil = parts per thousand = 1/1000
 
-# [INFO: Energest  ] --- Period summary #2 (60 seconds)
-# [INFO: Energest  ] Total time  :    1966080
-# [INFO: Energest  ] CPU         :      10374/   1966080 (5 permil)
-# [INFO: Energest  ] LPM         :    1955706/   1966080 (994 permil)
-# [INFO: Energest  ] Deep LPM    :          0/   1966080 (0 permil)
-# [INFO: Energest  ] Radio Tx    :        106/   1966080 (0 permil)
-# [INFO: Energest  ] Radio Rx    :     104802/   1966080 (53 permil)
-# [INFO: Energest  ] Radio total :     104908/   1966080 (53 permil)
+# ENERGEST: --- Period summary #3 (50 seconds)
+# ENERGEST: Total time  :    1638401
+# ENERGEST: CPU         :      72514/   1638401 (44 permil)
+# ENERGEST: LPM         :    1565887/   1638401 (955 permil)
+# ENERGEST: Deep LPM    :          0/   1638401 (0 permil)
+# ENERGEST: Radio Tx    :        531/   1638401 (0 permil)
+# ENERGEST: Radio Rx    :        387/   1638401 (0 permil)
+# ENERGEST: Radio total :        918/   1638401 (0 permil)
 
 @serialize
 @deserialize
@@ -84,42 +71,42 @@ def parse_summary(summary: List[str]) -> Optional[EnergestSummary]:
         return None
 
     # parse the summary
-    period_summary_re = re.compile(r"\[INFO: Energest  \] --- Period summary #(\d+) \((\d+) seconds\)")
+    period_summary_re = re.compile(r"ENERGEST: --- Period summary #(\d+) \((\d+) seconds\)")
     if (captures := period_summary_re.match(summary[0])):
         summary_id = int(captures.group(1))
 
     # parse the total time
-    total_time_re = re.compile(r"\[INFO: Energest  \] Total time  : +(\d+)")
+    total_time_re = re.compile(r"ENERGEST: Total time  : +(\d+)")
     if (captures := total_time_re.match(summary[1])):
         total_time = int(captures.group(1))
     
     # parse the CPU time
-    cpu_re = re.compile(r"\[INFO: Energest  \] CPU         : +(\d+)/ +(\d+) \((\d+) permil\)")
+    cpu_re = re.compile(r"ENERGEST: CPU         : +(\d+)/ +(\d+) \((\d+) permil\)")
     if (captures := cpu_re.match(summary[2])):
         cpu = int(captures.group(1))
     
     # parse the LPM time
-    lpm_re = re.compile(r"\[INFO: Energest  \] LPM         : +(\d+)/ +(\d+) \((\d+) permil\)")
+    lpm_re = re.compile(r"ENERGEST: LPM         : +(\d+)/ +(\d+) \((\d+) permil\)")
     if (captures := lpm_re.match(summary[3])):
         lpm = int(captures.group(1))
 
     # parse the Deep LPM time
-    deep_lpm_re = re.compile(r"\[INFO: Energest  \] Deep LPM    : +(\d+)/ +(\d+) \((\d+) permil\)")
+    deep_lpm_re = re.compile(r"ENERGEST: Deep LPM    : +(\d+)/ +(\d+) \((\d+) permil\)")
     if (captures := deep_lpm_re.match(summary[4])):
         deep_lpm = int(captures.group(1))
     
     # parse the Radio Tx time
-    radio_tx_re = re.compile(r"\[INFO: Energest  \] Radio Tx    : +(\d+)/ +(\d+) \((\d+) permil\)")
+    radio_tx_re = re.compile(r"ENERGEST: Radio Tx    : +(\d+)/ +(\d+) \((\d+) permil\)")
     if (captures := radio_tx_re.match(summary[5])):
         radio_tx = int(captures.group(1))
 
     # parse the Radio Rx time
-    radio_rx_re = re.compile(r"\[INFO: Energest  \] Radio Rx    : +(\d+)/ +(\d+) \((\d+) permil\)")
+    radio_rx_re = re.compile(r"ENERGEST: Radio Rx    : +(\d+)/ +(\d+) \((\d+) permil\)")
     if (captures := radio_rx_re.match(summary[6])):
         radio_rx = int(captures.group(1))
     
     # parse the Radio total time
-    radio_total_re = re.compile(r"\[INFO: Energest  \] Radio total : +(\d+)/ +(\d+) \((\d+) permil\)")
+    radio_total_re = re.compile(r"ENERGEST: Radio total : +(\d+)/ +(\d+) \((\d+) permil\)")
     if (captures := radio_total_re.match(summary[7])):
         radio_total = int(captures.group(1))
 
@@ -160,7 +147,7 @@ if __name__ == '__main__':
         print(f"File not found: {e}", file=sys.stderr)
         sys.exit(1)
 
-    lines = list(filter(lambda x: 'INFO: Energest' in x, lines))
+    lines = list(filter(lambda x: 'ENERGEST: ' in x, lines))
     lines = list(map(lambda x: x.strip(), lines))
 
     indices_of_where_a_summary_block_starts = [i for i, line in enumerate(lines) if '--- Period summary' in line]
@@ -187,23 +174,32 @@ if __name__ == '__main__':
 
     # TODO: handle --average
 
-    reports: List[Report] = []
+    reports: list[Report] = []
     
     for summary in summaries:
         total_avg_current_mA = 0
         period_ticks = summary.total_time
         period_sec = period_ticks / RTIMER_ARCH_SECOND
 
-        total_avg_current_mA += summary.cpu * CURRENT_MA['CPU'] / period_ticks
-        total_avg_current_mA += summary.lpm * CURRENT_MA['LPM'] / period_ticks
-        total_avg_current_mA += summary.deep_lpm * CURRENT_MA['Deep LPM'] / period_ticks
-        total_avg_current_mA += summary.radio_tx * CURRENT_MA['Radio Tx'] / period_ticks
-        total_avg_current_mA += summary.radio_rx * CURRENT_MA['Radio Rx'] / period_ticks
+        current_cpu_mA = summary.cpu * CURRENT_MA['CPU'] / period_ticks
+        current_lpm_mA = summary.lpm * CURRENT_MA['LPM'] / period_ticks
+        current_deep_lpm_mA = summary.deep_lpm * CURRENT_MA['DEEP LPM'] / period_ticks
+        current_radio_tx_mA = summary.radio_tx * CURRENT_MA['RADIO Tx'] / period_ticks
+        current_radio_rx_mA = summary.radio_rx * CURRENT_MA['RADIO Rx'] / period_ticks
 
-        total_charge_mC = period_ticks * total_avg_current_mA / RTIMER_ARCH_SECOND
+        total_avg_current_mA = current_cpu_mA + current_lpm_mA + current_deep_lpm_mA + current_radio_tx_mA + current_radio_rx_mA
+
+        # total_avg_current_mA += summary.cpu * CURRENT_MA['CPU'] / period_ticks
+        # total_avg_current_mA += summary.lpm * CURRENT_MA['LPM'] / period_ticks
+        # total_avg_current_mA += summary.deep_lpm * CURRENT_MA['Deep LPM'] / period_ticks
+        # total_avg_current_mA += summary.radio_tx * CURRENT_MA['Radio Tx'] / period_ticks
+        # total_avg_current_mA += summary.radio_rx * CURRENT_MA['Radio Rx'] / period_ticks
+
+        total_charge_mC = period_sec * total_avg_current_mA
+        total_charge_mAh = total_charge_mC / 3600
         total_energy_mJ = total_charge_mC * VOLTAGE
         
-        reports.append(Report(summary, total_charge_mC, total_charge_mC / 3600, total_energy_mJ))
+        reports.append(Report(summary, total_charge_mC, total_charge_mAh=total_charge_mAh, total_energy_mJ=total_energy_mJ))
 
 
 

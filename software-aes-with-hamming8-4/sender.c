@@ -10,11 +10,15 @@
 #include "dev/leds.h" 
 #include "dev/light-sensor.h"
 
+#include "../energest-utils.h"
+
+
 #include <string.h> // for memcpy, memset
 
 
 #define AES_128_BLOCK_LENGTH 16 // 128 bits
-#define SEND_INTERVAL (CLOCK_SECOND * 5)
+// #define SEND_INTERVAL (CLOCK_SECOND * 5)
+#define SEND_INTERVAL (CLOCK_SECOND * 2.5)
 #define LIGHT_SENSOR_READ_INTERVAL (CLOCK_SECOND * 0.25)
 
 
@@ -122,6 +126,9 @@ PROCESS_THREAD(main_process, ev, data) {
 	nullnet_buf = (uint8_t *) &hamming_encoded;
 	nullnet_len = sizeof(hamming_encoded);
 
+  energest_utils_init();
+
+
 	while (1) {
 		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
 		// get the time right now
@@ -190,6 +197,13 @@ PROCESS_THREAD(main_process, ev, data) {
 		NETSTACK_RADIO.on();
 		NETSTACK_NETWORK.output(NULL); // send as broadcast
 		NETSTACK_RADIO.off();
+
+		 // print energest summary every iterations
+    // to get a more accurate power consumption measurement
+    // The user can then average the values with / 10
+    if (count % 10 == 0) {
+      energest_utils_step();
+    }
 
 		count += 1;
 		etimer_reset(&periodic_timer);

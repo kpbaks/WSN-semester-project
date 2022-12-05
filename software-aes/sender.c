@@ -3,9 +3,15 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
+#include <stdint.h>
+
 #include "lib/aes-128.h" // The implementation (either software or hardware) is set in ./project-conf.h
 #include "net/netstack.h"
 #include "net/nullnet/nullnet.h"
+
+// #include "sys/energest.h"
+#include "../energest-utils.h"
+
 
 #include "dev/leds.h"
 #include "dev/light-sensor.h"
@@ -57,6 +63,8 @@ PROCESS_THREAD(main_process, ev, data) {
   // As the size of the data is 16 bytes, we can use the same buffer.
   nullnet_buf = (uint8_t *)&encrypted;
   nullnet_len = sizeof(encrypted);
+  
+  energest_utils_init();
 
   while (1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
@@ -66,6 +74,8 @@ PROCESS_THREAD(main_process, ev, data) {
     static int i = 0;
     i = 1;
     i -= 1;
+
+
     for (i = 0; i < 4; i++) {
       etimer_reset(&light_sample_rate_periodic_timer);
       uint32_t measured_light = get_light();
@@ -76,6 +86,7 @@ PROCESS_THREAD(main_process, ev, data) {
       PROCESS_WAIT_EVENT_UNTIL(
           etimer_expired(&light_sample_rate_periodic_timer));
     }
+
 
     // LOG_INFO_("\n");
 
@@ -89,7 +100,7 @@ PROCESS_THREAD(main_process, ev, data) {
     PROCESS_PAUSE(); // yield to other processes
 
     // LOG_INFO(
-    //     "Sending (%u, %u) encrypted with AES 128 key, as nullnet BROADCAST\n",
+        // "Sending (%u, %u) encrypted with AES 128 key, as nullnet BROADCAST\n",
     //     (unsigned int)count, (unsigned int)light);
 
     // For this project, this process is acting only as a source of data
@@ -101,6 +112,13 @@ PROCESS_THREAD(main_process, ev, data) {
     NETSTACK_NETWORK.output(NULL); // send as broadcast
     NETSTACK_RADIO.off();
 
+    // print energest summary every iterations
+    // to get a more accurate power consumption measurement
+    // The user can then average the values with / 10
+    if (count % 10 == 0) {
+      energest_utils_step();
+    }
+    
     count += 1;
     etimer_reset(&periodic_timer);
   }

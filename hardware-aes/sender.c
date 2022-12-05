@@ -10,6 +10,8 @@
 #include "dev/leds.h"
 #include "dev/light-sensor.h"
 
+#include "../energest-utils.h"
+
 #include <string.h> // for memcpy, memset
 
 #define AES_128_BLOCK_LENGTH 16 // 128 bits
@@ -58,6 +60,9 @@ PROCESS_THREAD(main_process, ev, data) {
   nullnet_buf = (uint8_t *)&encrypted;
   nullnet_len = sizeof(encrypted);
 
+  energest_utils_init();
+
+
   while (1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
 
@@ -77,7 +82,7 @@ PROCESS_THREAD(main_process, ev, data) {
           etimer_expired(&light_sample_rate_periodic_timer));
     }
 
-    LOG_INFO_("\n");
+    // LOG_INFO_("\n");
 
     // LOG_INFO("packet (cleartext) %d: ", i);
     // print_aes_block_as_hex(encrypted);
@@ -100,6 +105,13 @@ PROCESS_THREAD(main_process, ev, data) {
     NETSTACK_RADIO.on();
     NETSTACK_NETWORK.output(NULL); // send as broadcast
     NETSTACK_RADIO.off();
+
+    // print energest summary every iterations
+    // to get a more accurate power consumption measurement
+    // The user can then average the values with / 10
+    if (count % 10 == 0) {
+      energest_utils_step();
+    }
 
     count += 1;
     etimer_reset(&periodic_timer);

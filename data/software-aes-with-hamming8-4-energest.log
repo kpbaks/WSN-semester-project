@@ -1,0 +1,228 @@
+  MKDIR     build/sky/obj/.deps
+  CC        sender.c
+  CC        ../../../os/contiki-main.c
+  CC        ../../../arch/platform/sky/./contiki-sky-platform.c
+  CC        ../../../arch/dev/sensor/sht11/sht11.c
+  CC        ../../../arch/dev/sensor/sht11/sht11-sensor.c
+  CC        ../../../arch/platform/sky/dev/light-sensor.c
+  CC        ../../../arch/platform/sky/dev/battery-sensor.c
+  CC        ../../../arch/platform/sky/dev/button-sensor.c
+  CC        ../../../arch/cpu/msp430/f1xxx/spi-legacy.c
+  CC        ../../../arch/dev/etc/ds2411/ds2411.c
+  CC        ../../../arch/platform/sky/dev/xmem.c
+  CC        ../../../arch/platform/sky/dev/i2c.c
+  CC        ../../../os/lib/sensors.c
+  CC        ../../../arch/dev/radio/cc2420/cc2420.c
+  CC        ../../../arch/cpu/msp430/./cc2420-arch.c
+  CC        ../../../arch/cpu/msp430/./cc2420-arch-sfd.c
+  CC        ../../../arch/platform/sky/dev/sky-sensors.c
+  CC        ../../../arch/cpu/msp430/./uip-ipchksum.c
+  CC        ../../../arch/cpu/msp430/f1xxx/uart1.c
+  CC        ../../../arch/cpu/msp430/./slip_uart1.c
+  CC        ../../../arch/cpu/msp430/dev/uart1-putchar.c
+  CC        ../../../arch/platform/sky/./platform.c
+  CC        ../../../os/lib/crc16.c
+  CC        ../../../arch/cpu/msp430/f1xxx/msp430.c
+  CC        ../../../arch/cpu/msp430/./flash.c
+  CC        ../../../arch/cpu/msp430/f1xxx/clock.c
+  CC        ../../../os/dev/leds.c
+  CC        ../../../arch/cpu/msp430/./leds-arch.c
+  CC        ../../../arch/cpu/msp430/./watchdog.c
+  CC        ../../../arch/cpu/msp430/./lpm.c
+  CC        ../../../arch/cpu/msp430/f1xxx/rtimer-arch.c
+  CC        ../../../arch/cpu/msp430/./int-master.c
+  CC        ../../../arch/dev/radio/cc2420/cc2420-tsch-15ms.c
+  CC        ../../../os/dev/button-hal.c
+  CC        ../../../os/dev/gpio-hal.c
+  CC        ../../../os/dev/nullradio.c
+  CC        ../../../os/dev/serial-line.c
+  CC        ../../../os/dev/spi.c
+  CC        ../../../os/lib/aes-128.c
+  CC        ../../../os/lib/assert.c
+  CC        ../../../os/lib/ccm-star.c
+  CC        ../../../os/lib/circular-list.c
+  CC        ../../../os/lib/dbl-circ-list.c
+  CC        ../../../os/lib/dbl-list.c
+  CC        ../../../os/lib/heapmem.c
+  CC        ../../../os/lib/hexconv.c
+  CC        ../../../os/lib/ifft.c
+  CC        ../../../os/lib/list.c
+  CC        ../../../os/lib/memb.c
+  CC        ../../../os/lib/random.c
+  CC        ../../../os/lib/ringbuf.c
+  CC        ../../../os/lib/ringbufindex.c
+  CC        ../../../os/lib/trickle-timer.c
+  CC        ../../../os/net/link-stats.c
+  CC        ../../../os/net/linkaddr.c
+  CC        ../../../os/net/nbr-table.c
+  CC        ../../../os/net/net-debug.c
+  CC        ../../../os/net/netstack.c
+  CC        ../../../os/net/packetbuf.c
+  CC        ../../../os/net/queuebuf.c
+  CC        ../../../os/net/mac/mac-sequence.c
+  CC        ../../../os/net/mac/mac.c
+  CC        ../../../os/net/mac/csma/anti-replay.c
+  CC        ../../../os/net/mac/csma/ccm-star-packetbuf.c
+  CC        ../../../os/net/mac/csma/csma-output.c
+  CC        ../../../os/net/mac/csma/csma-security.c
+  CC        ../../../os/net/mac/csma/csma.c
+  CC        ../../../os/net/mac/framer/frame802154.c
+  CC        ../../../os/net/mac/framer/frame802154e-ie.c
+  CC        ../../../os/net/mac/framer/framer-802154.c
+  CC        ../../../os/net/mac/framer/nullframer.c
+  CC        ../../../os/net/nullnet/nullnet.c
+  CC        ../../../os/net/routing/nullrouting/nullrouting.c
+  CC        ../../../os/storage/cfs/cfs-coffee.c
+  CC        ../../../os/sys/atomic.c
+  CC        ../../../os/sys/autostart.c
+  CC        ../../../os/sys/compower.c
+  CC        ../../../os/sys/ctimer.c
+  CC        ../../../os/sys/energest.c
+  CC        ../../../os/sys/etimer.c
+  CC        ../../../os/sys/log.c
+  CC        ../../../os/sys/mutex.c
+  CC        ../../../os/sys/node-id.c
+  CC        ../../../os/sys/process.c
+  CC        ../../../os/sys/rtimer.c
+  CC        ../../../os/sys/stack-check.c
+  CC        ../../../os/sys/stimer.c
+  CC        ../../../os/sys/timer.c
+  LD        build/sky/sender.sky
+msp430-objcopy build/sky/sender.sky -O ihex sender.ihex
+make IHEXFILE=sender.ihex sky-reset sky-upload
+make[1]: Entering directory '/home/user/contiki-ng/exercises/WSN-semester-project/software-aes-with-hamming8-4'
+make -k -j 20 sky-reset-sequence
+make[2]: Entering directory '/home/user/contiki-ng/exercises/WSN-semester-project/software-aes-with-hamming8-4'
+../../../tools/sky/msp430-bsl-linux --telosb -c /dev/ttyUSB0 -r
+Done
+make[2]: Leaving directory '/home/user/contiki-ng/exercises/WSN-semester-project/software-aes-with-hamming8-4'
+make -j 20 sky-upload-sequence
+make[2]: Entering directory '/home/user/contiki-ng/exercises/WSN-semester-project/software-aes-with-hamming8-4'
++++++ Erasing /dev/ttyUSB0
++++++ Programming /dev/ttyUSB0
++++++ Resetting /dev/ttyUSB0
+Done
+make[2]: Leaving directory '/home/user/contiki-ng/exercises/WSN-semester-project/software-aes-with-hamming8-4'
+make[1]: Leaving directory '/home/user/contiki-ng/exercises/WSN-semester-project/software-aes-with-hamming8-4'
+rlwrap ../../../tools/serial-io/serialdump -b115200 /dev/ttyUSB0
+[INFO: Main      ] Starting Contiki-NG-release/v4.8-342-g27cbe8cc6-dirty
+[INFO: Main      ] - Routing: nullrouting
+[INFO: Main      ] - Net: nullnet
+[INFO: Main      ] - MAC: CSMA
+[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+[INFO: Main      ] - 802.15.4 Default channel: 26
+[INFO: Main      ] Node ID: 4608
+[INFO: Main      ] Link-layer address: d8a4.df1c.0074.1200
+[INFO: Sky       ] CC2420 CCA threshold -45
+ENERGEST: --- Period summary #0 (2 seconds)
+ENERGEST: Total time  :      81991
+ENERGEST: CPU         :       3311/     81991 (40 permil)
+ENERGEST: LPM         :      78680/     81991 (959 permil)
+ENERGEST: Deep LPM    :          0/     81991 (0 permil)
+ENERGEST: Radio Tx    :          0/     81991 (0 permil)
+ENERGEST: Radio Rx    :      81982/     81991 (999 permil)
+ENERGEST: Radio total :      81982/     81991 (999 permil)
+ENERGEST: --- Period summary #1 (24 seconds)
+ENERGEST: Total time  :     819197
+ENERGEST: CPU         :      39386/    819197 (48 permil)
+ENERGEST: LPM         :     779811/    819197 (951 permil)
+ENERGEST: Deep LPM    :          0/    819197 (0 permil)
+ENERGEST: Radio Tx    :        527/    819197 (0 permil)
+ENERGEST: Radio Rx    :        388/    819197 (0 permil)
+ENERGEST: Radio total :        915/    819197 (1 permil)
+ENERGEST: --- Period summary #2 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      40239/    819200 (49 permil)
+ENERGEST: LPM         :     778961/    819200 (950 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        530/    819200 (0 permil)
+ENERGEST: Radio Rx    :        388/    819200 (0 permil)
+ENERGEST: Radio total :        918/    819200 (1 permil)
+ENERGEST: --- Period summary #3 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      39830/    819200 (48 permil)
+ENERGEST: LPM         :     779370/    819200 (951 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        530/    819200 (0 permil)
+ENERGEST: Radio Rx    :        389/    819200 (0 permil)
+ENERGEST: Radio total :        919/    819200 (1 permil)
+ENERGEST: --- Period summary #4 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      40221/    819200 (49 permil)
+ENERGEST: LPM         :     778979/    819200 (950 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        530/    819200 (0 permil)
+ENERGEST: Radio Rx    :        388/    819200 (0 permil)
+ENERGEST: Radio total :        918/    819200 (1 permil)
+ENERGEST: --- Period summary #5 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      39691/    819200 (48 permil)
+ENERGEST: LPM         :     779509/    819200 (951 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        529/    819200 (0 permil)
+ENERGEST: Radio Rx    :        389/    819200 (0 permil)
+ENERGEST: Radio total :        918/    819200 (1 permil)
+ENERGEST: --- Period summary #6 (25 seconds)
+ENERGEST: Total time  :     819201
+ENERGEST: CPU         :      40209/    819201 (49 permil)
+ENERGEST: LPM         :     778992/    819201 (950 permil)
+ENERGEST: Deep LPM    :          0/    819201 (0 permil)
+ENERGEST: Radio Tx    :        529/    819201 (0 permil)
+ENERGEST: Radio Rx    :        389/    819201 (0 permil)
+ENERGEST: Radio total :        918/    819201 (1 permil)
+ENERGEST: --- Period summary #7 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      39664/    819200 (48 permil)
+ENERGEST: LPM         :     779536/    819200 (951 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        530/    819200 (0 permil)
+ENERGEST: Radio Rx    :        390/    819200 (0 permil)
+ENERGEST: Radio total :        920/    819200 (1 permil)
+ENERGEST: --- Period summary #8 (24 seconds)
+ENERGEST: Total time  :     819199
+ENERGEST: CPU         :      40320/    819199 (49 permil)
+ENERGEST: LPM         :     778879/    819199 (950 permil)
+ENERGEST: Deep LPM    :          0/    819199 (0 permil)
+ENERGEST: Radio Tx    :        527/    819199 (0 permil)
+ENERGEST: Radio Rx    :        389/    819199 (0 permil)
+ENERGEST: Radio total :        916/    819199 (1 permil)
+ENERGEST: --- Period summary #9 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      39653/    819200 (48 permil)
+ENERGEST: LPM         :     779547/    819200 (951 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        526/    819200 (0 permil)
+ENERGEST: Radio Rx    :        390/    819200 (0 permil)
+ENERGEST: Radio total :        916/    819200 (1 permil)
+ENERGEST: --- Period summary #10 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      40633/    819200 (49 permil)
+ENERGEST: LPM         :     778567/    819200 (950 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        527/    819200 (0 permil)
+ENERGEST: Radio Rx    :        390/    819200 (0 permil)
+ENERGEST: Radio total :        917/    819200 (1 permil)
+ENERGEST: --- Period summary #11 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      39508/    819200 (48 permil)
+ENERGEST: LPM         :     779692/    819200 (951 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        528/    819200 (0 permil)
+ENERGEST: Radio Rx    :        390/    819200 (0 permil)
+ENERGEST: Radio total :        918/    819200 (1 permil)
+ENERGEST: --- Period summary #12 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      40667/    819200 (49 permil)
+ENERGEST: LPM         :     778533/    819200 (950 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        528/    819200 (0 permil)
+ENERGEST: Radio Rx    :        390/    819200 (0 permil)
+ENERGEST: Radio total :        918/    819200 (1 permil)
+ENERGEST: --- Period summary #13 (25 seconds)
+ENERGEST: Total time  :     819200
+ENERGEST: CPU         :      39649/    819200 (48 permil)
+ENERGEST: LPM         :     779551/    819200 (951 permil)
+ENERGEST: Deep LPM    :          0/    819200 (0 permil)
+ENERGEST: Radio Tx    :        528/    819200 (0 permil)
+ENERGEST: Radio Rx    :        390/    819200 (0 permil)
+ENERGEST: Radio total :        918/    819200 (1 permil)

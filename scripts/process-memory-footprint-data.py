@@ -113,6 +113,7 @@ plt.xticks(xticks, [f'{int(x/kB)} kB' for x in xticks])
 plt.legend()
 plt.tight_layout()
 plt.savefig('../charts/horizontal_bar_chart_of_memory_usage.png', dpi=300)
+plt.savefig('../charts/horizontal_bar_chart_of_memory_usage.pdf', format='pdf')
 plt.show()
 
 #%%
@@ -164,5 +165,6 @@ fig.suptitle('Flash Memory Usage (48 kB)', fontsize=16)
 
 plt.tight_layout()
 plt.savefig('../charts/pie_chart_of_memory_usage.png', dpi=300)
+plt.savefig('../charts/pie_chart_of_memory_usage.pdf', format='pdf')
 
 plt.show()

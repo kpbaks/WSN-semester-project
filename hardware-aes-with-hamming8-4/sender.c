@@ -12,6 +12,8 @@
 
 #include "../energest-utils.h"
 
+// for timing measurements RTIMER_NOW() AND RTIMER_SECOND
+#include "sys/rtimer.h"
 
 #include <string.h> // for memcpy, memset
 
@@ -99,6 +101,8 @@ PROCESS_THREAD(main_process, ev, data) {
 
 	static uint32_t count = 0;
 	// static uint32_t light = 0;
+	static rtimer_clock_t t_start, t_end, t_elapsed;
+  
 	static uint8_t encrypted[16] = {0};
 	static uint16_t hamming_encoded[16] = {0};
 	// static clock_time_t t_total = 0;
@@ -151,6 +155,9 @@ PROCESS_THREAD(main_process, ev, data) {
           etimer_expired(&light_sample_rate_periodic_timer));
 		}
 
+		    t_start = RTIMER_NOW();
+
+
 		// The last 8 bytes, are empty, as the the aes block size is 16 bytes
 		// and we only need 4 bytes for the light value, and 4 bytes for the counter.
 		// memset(encrypted, 0x00, sizeof(encrypted));
@@ -196,6 +203,12 @@ PROCESS_THREAD(main_process, ev, data) {
 		NETSTACK_RADIO.on();
 		NETSTACK_NETWORK.output(NULL); // send as broadcast
 		NETSTACK_RADIO.off();
+
+		 t_end = RTIMER_NOW();
+    t_elapsed = t_end - t_start;
+  
+    LOG_INFO("TIMING: Time elapsed: %u RTIMER_SECOND = %u\n", t_elapsed, RTIMER_SECOND);
+    
 
 		 // print energest summary every iterations
     // to get a more accurate power consumption measurement

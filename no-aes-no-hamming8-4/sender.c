@@ -12,6 +12,9 @@
 
 #include "../energest-utils.h"
 
+// for timing measurements RTIMER_NOW() AND RTIMER_SECOND
+#include "sys/rtimer.h"
+
 
 #include <string.h> // for memcpy, memset
 
@@ -91,6 +94,8 @@ PROCESS_THREAD(main_process, ev, data) {
 
   static struct etimer periodic_timer;
   static struct etimer light_sample_rate_periodic_timer;
+  static rtimer_clock_t t_start, t_end, t_elapsed;
+  
   static uint32_t count = 0;
   // static uint32_t light = 0;
   static uint8_t encrypted[16] = {0};
@@ -124,6 +129,8 @@ PROCESS_THREAD(main_process, ev, data) {
     static int i = 0;
     i = 1;
     i -= 1;
+    t_start = RTIMER_NOW();
+    
     for (i = 0; i < 4; i++) {
       etimer_reset(&light_sample_rate_periodic_timer);
       uint32_t measured_light = get_light();
@@ -134,6 +141,7 @@ PROCESS_THREAD(main_process, ev, data) {
       PROCESS_WAIT_EVENT_UNTIL(
           etimer_expired(&light_sample_rate_periodic_timer));
     }
+
 
     // LOG_INFO_("\n");
 
@@ -158,6 +166,12 @@ PROCESS_THREAD(main_process, ev, data) {
     NETSTACK_RADIO.on();
     NETSTACK_NETWORK.output(NULL); // send as broadcast
     NETSTACK_RADIO.off();
+
+    t_end = RTIMER_NOW();
+    t_elapsed = t_end - t_start;
+  
+    LOG_INFO("TIMING: Time elapsed: %u RTIMER_SECOND = %u\n", t_elapsed, RTIMER_SECOND);
+    
 
     // print energest summary every iterations
     // to get a more accurate power consumption measurement

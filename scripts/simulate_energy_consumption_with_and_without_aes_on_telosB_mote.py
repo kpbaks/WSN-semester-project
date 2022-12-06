@@ -5,6 +5,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 import functools as ft
 import itertools as it
+import time
+import operator as op
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,7 +16,8 @@ from tqdm import tqdm
 # %%
 
 # simulation parameters
-NUM_PAYLOADS = 10**4
+NUM_PAYLOADS = 10**3
+NUM_PAYLOADS_TO_TRY_BEFORE_GIVING_UP = NUM_PAYLOADS * 10 # if the number of received packets exceeds this number, the simulation for the current configuration is aborted
 PAYLOAD_SIZE = 128  # bits
 AES_ENCRYPTION = True
 HAMMING_8_4_ENCODING = True
@@ -142,11 +145,17 @@ class GilbertElliotChannel(NoiseModel):
 
 
 noise_models: list[NoiseModel] =  [
-    BinarySymmetricChannel(10**-i)
-    for i in range(3, 6)
-] + [
-    GilbertElliotChannel(0.1, 0.5, True)
-]
+    BinarySymmetricChannel(0.1),
+    BinarySymmetricChannel(0.01),
+    BinarySymmetricChannel(0.001),
+    BinarySymmetricChannel(0.0001),
+    BinarySymmetricChannel(0.00001),
+
+    # GilbertElliotChannel(0.1, 0.5, True),  
+    GilbertElliotChannel(0.001, 0.1, True),
+    GilbertElliotChannel(0.001, 0.3, True),
+    GilbertElliotChannel(0.0001, 0.1, True),
+] 
 
 #%%
 
@@ -202,26 +211,14 @@ class OctetInterleaving(OrderingScheme):
 
     def order(self, payload: list[int]) -> list[int]:
         assert len(payload) % 8 == 0, 'payload must be a multiple of 8, but is {}'.format(payload)
-        # # with interleaving
-        # indices: list[int] = [
-        #     i + 8 * j
-        #     for i in range(8) for j in range(len(payload) // 8)
-        # ] 
-        # return [payload[i] for i in indices]
-
+     
         return np.array(payload) \
             .reshape((len(payload) // 8, 8)) \
             .transpose() \
             .reshape(-1) \
             .tolist()
 
-        # payload = np.array(payload)
-        # payload = payload.reshape((len(payload) // 8, 8))
-        # payload = payload.T
-        # payload = payload.reshape(-1)
-        # return payload.tolist()
-
-
+     
     def reorder(self, payload: list[int]) -> list[int]:
         assert len(payload) % 8 == 0, 'payload must be a multiple of 8, but is {}'.format(payload)
 
@@ -230,39 +227,12 @@ class OctetInterleaving(OrderingScheme):
             .transpose() \
             .reshape(-1) \
             .tolist()
-        # payload = np.array(payload)
-        # payload = payload.reshape(8, -1)
-        # # print(payload.T)
-        # # concat columns left to right
-        # return payload.T.flatten().tolist()
-        
-
-        # # without interleaving
-        # indices: list[int] = [
-        #     8 * j + i
-        #     for j in range(len(payload) // 8) for i in range(8)
-        # ]
-        # print(indices)
-        # breakpoint()
-        # return [payload[i] for i in indices]
-
 
 ordering_schemes: list[OrderingScheme] = [
     NoOrdering(),
     OctetInterleaving(),
 ]
 
-
-payload = [i for i in range(256)]
-print('payload: {}'.format(payload))
-for ordering_scheme in ordering_schemes:
-    ordered_payload = ordering_scheme.order(payload)
-    print('ordering scheme: {}'.format(ordering_scheme.get_name()))
-    print('ordered payload: {}'.format(ordered_payload))
-    print('reordered payload: {}'.format(ordering_scheme.reorder(ordered_payload)))
-
-    assert payload == ordering_scheme.reorder(ordered_payload), 'ordering scheme {} does not work'.format(ordering_scheme.get_name())
-    
 
 
 #%%
@@ -271,35 +241,34 @@ for ordering_scheme in ordering_schemes:
 class SimulationResult:
     name: str
     total_energy: float
-    total_cumulative_over_payloads: list[float]
+    total_cumulative_energy_over_payloads: list[float]
     total_time: float
-    total_cumulative_over_payloads_time: list[float]
+    total_cumulative_time_over_payloads: list[float]
     payload_size: int
     num_payloads: int
     aes_encryption: bool
     hamming_8_4_encoding: bool
     noise_model: NoiseModel
     ordering_scheme: OrderingScheme
+    concede: bool = False
 
-
+#%%
 gen_random_payload = lambda size: [random.randint(0, 1) for _ in range(size)]
-
-# breakpoint()
 
 simulation_results: list[SimulationResult] = []
 
-# n = 0
-# for configuration, noise_model, ordering_scheme in it.product(configurations, noise_models, ordering_schemes):
-    
-#     print(n)
-#     n += 1
-    
-#%%
+pbar0 = tqdm(total=len(noise_models) * len(ordering_schemes) * len(configurations.keys()), desc='configurations')
 
 for name, configuration in configurations.items():
     for noise_model in noise_models:
         for ordering_scheme in ordering_schemes:
-            
+            pbar0.set_description('configurations: {} noise model: {} ordering scheme: {}'.format(name, noise_model.get_name(), ordering_scheme.get_name()))
+            pbar0.update(1)
+
+            pbar1 = tqdm(total=NUM_PAYLOADS, desc='{} - {}'.format(name, noise_model.get_name()))
+
+            print(f'configuration: {name}, noise model: {noise_model.get_name()}, ordering scheme: {ordering_scheme.get_name()}', end='\r')
+
             total_energy: float = 0.0
             total_time: float = 0.0
             cummulitive_energy_used: list[float] = []
@@ -311,7 +280,7 @@ for name, configuration in configurations.items():
             payload_size: int = configuration.payload_size
             max_bit_error_tolerance_per_byte = 1 if configuration.hamming else 0
 
-            while payloads_successfully_received < NUM_PAYLOADS:
+            while payloads_successfully_received < NUM_PAYLOADS and payloads_received < NUM_PAYLOADS_TO_TRY_BEFORE_GIVING_UP:
                 payloads_received += 1
                 total_energy += configuration.energy
                 total_time += configuration.time
@@ -329,114 +298,83 @@ for name, configuration in configurations.items():
                 # if it is not, increment the counter
                 payload_diff: list[int] = [a ^ b for a, b in zip(payload, reordered_payload)]
 
+                error_detected: bool = False
                 for i in range(0, payload_size, 8):
                     byte = payload_diff[i:i+8]
                     if sum(byte) > max_bit_error_tolerance_per_byte:
                         # error detected, discard payload and try again
-                        print('error detected')
+                        # print('error detected')
+                        error_detected = True
                         break
-                
-                # store the cummulatively used energy and time
-                # for the number of payloads successfully received
-                payloads_successfully_received += 1
-                cummulitive_energy_used.append(total_energy)
-                cummulitive_time_used.append(total_time)
+
+                if not error_detected:        
+                    # store the cummulatively used energy and time
+                    # for the number of payloads successfully received
+                    payloads_successfully_received += 1
+                    cummulitive_energy_used.append(total_energy)
+                    cummulitive_time_used.append(total_time)
+                    pbar1.update(1)
 
             
+            print(f"""
+configuration: {name}
+noise model: {noise_model.get_name()}
+total energy: {total_energy}
+total time: {total_time}
+payloads received: {payloads_received}
+payloads successfully received: {payloads_successfully_received}
+
+""")
+            pbar1.close()
+            
+            concede = payloads_received == NUM_PAYLOADS_TO_TRY_BEFORE_GIVING_UP
+            if concede:
+                print('conceded')
+
             simulation_results.append(SimulationResult(
-                name=name,
+                name=f'{name} - {noise_model.get_name()} - {ordering_scheme.get_name()}',
                 total_energy= total_energy,
-                total_cumulative_over_payloads=cummulitive_energy_used,
+                total_cumulative_energy_over_payloads=cummulitive_energy_used,
                 total_time= total_time,
-                total_cumulative_over_payloads_time=cummulitive_time_used,
+                total_cumulative_time_over_payloads=cummulitive_time_used,
                 payload_size=payload_size,
                 num_payloads=payloads_received,
                 aes_encryption=configuration.aes,
                 hamming_8_4_encoding=configuration.hamming,
                 noise_model=noise_model,
                 ordering_scheme=ordering_scheme,
+                concede=concede
             ))
       
+print('simulation done')
 
 
 #%%
 
+print(len(simulation_results))
 
+for simulation_result in simulation_results:
+    print(simulation_result.name)
+    print(simulation_result.num_payloads)
+    print(simulation_result.total_energy)
+    print(simulation_result.total_time)
 
-plt.plot(np.arange(0, NUM_PAYLOADS), simulation_results[9].total_cumulative_over_payloads)
+    print()
+
 
 
 #%%
-# plot the results
-# for each configuration, plot the energy used over the number of payloads received
-# for each configuration, plot the time used over the number of payloads received
 
-fig, axs = plt.subplots(5, 1, figsize=(10, 20))
-axs = axs.flatten()
+for simulation_result in simulation_results:
+    if simulation_result.concede:
+        print(f'{simulation_result.name} conceded')
+        continue
 
-for i, (name, configuration) in enumerate(configurations.items()):
-    for noise_model in noise_models:
-        for ordering_scheme in ordering_schemes:
-            simulation_result = next(filter(
-                lambda result: result.name == name and result.noise_model == noise_model and result.ordering_scheme == ordering_scheme,
-                simulation_results
-            ))
+    plt.plot(np.arange(1, NUM_PAYLOADS + 1), simulation_result.total_cumulative_energy_over_payloads, label=simulation_result.name)
 
-            axs[i].plot(
-                simulation_result.total_cumulative_over_payloads,
-                simulation_result.total_cumulative_over_payloads_time,
-                label=noise_model.get_name() + ' ' + ordering_scheme.get_name()
-            )
-            axs[i].set_title(name)
-            axs[i].set_xlabel('energy used')
-            axs[i].set_ylabel('time used')
-            axs[i].legend()
-
-plt.tight_layout()
+plt.xlabel('number of payloads received')
+plt.ylabel('cumulative energy used')
+plt.legend()
+plt.grid()
 plt.show()
 
-#%%
-
-
-
-# when forward error correction is used, the payload size is increased to 128 * 2 = 256 bits
-# a (8,4) Hamming code is used, which means that 4 bits are encoded into 8 bits
-# a (8,4) Hamming code, can correct up to 1 bit error in 8 bits
-
-# number of packets that are dropped due to errors
-dropped_packets: list[int] = [0 for _ in range(len(bit_error_probabilities))]
-# assume that when a payload is dropped, the retranmission will be successful
-
-payload: list[int] = [random.randint(0, 1) for _ in range(PAYLOAD_SIZE)]
-
-for i, bep in tqdm(enumerate(bit_error_probabilities), desc="Running simulation"):
-    dropped_packets[i] = 0
-    for _ in tqdm(
-        range(ITERATIONS), desc=f"going through simulation runs for BEP={bep:.0e}"
-    ):
-        # simulate the affect of the noisy channel on the payload
-        noisy_payload = [
-            (payload[i] ^ 1) if random.random() < bep else payload[i]
-            for i in range(PAYLOAD_SIZE)
-        ]
-        # go over the payload in chunks of 8 bits and check if there is an error
-        # if there are more than 1 error, the packet is dropped (the case when fec is used, else 0)
-        diff: list[int] = [payload[i] ^ noisy_payload[i] for i in range(PAYLOAD_SIZE)]
-        for j in range(0, PAYLOAD_SIZE, 8):
-            if sum(diff[j : j + 8]) > 1:
-                dropped_packets[i] += 1
-                break
-
-dropped_packets_mapped_to_their_bep = {
-    bep: dropped_packets[i] for i, bep in enumerate(bit_error_probabilities)
-}
-
-# %%
-
-pp(dropped_packets_mapped_to_their_bep)
-
-# plot the results in a bar chart
-# plot the results in a line plot, with the x-axis being the bitflip
-# probability/(number of iterations) and the y-axis being the total energy consumption.
-
-# %%

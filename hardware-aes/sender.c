@@ -10,6 +10,10 @@
 #include "dev/leds.h"
 #include "dev/light-sensor.h"
 
+// for timing measurements RTIMER_NOW() AND RTIMER_SECOND
+#include "sys/rtimer.h"
+
+
 #include "../energest-utils.h"
 
 #include <string.h> // for memcpy, memset
@@ -38,6 +42,8 @@ PROCESS_THREAD(main_process, ev, data) {
 
   static struct etimer periodic_timer;
   static struct etimer light_sample_rate_periodic_timer;
+  static rtimer_clock_t t_start, t_end, t_elapsed;
+  
   static uint32_t count = 0;
   // static uint32_t light = 0;
   static uint8_t encrypted[16] = {0};
@@ -84,6 +90,8 @@ PROCESS_THREAD(main_process, ev, data) {
 
     // LOG_INFO_("\n");
 
+    t_start = RTIMER_NOW();
+
     // LOG_INFO("packet (cleartext) %d: ", i);
     // print_aes_block_as_hex(encrypted);
     AES_128.encrypt(encrypted);
@@ -91,8 +99,7 @@ PROCESS_THREAD(main_process, ev, data) {
 
     // LOG_INFO("packet (encrypted): ");
     // print_aes_block_as_hex(encrypted);
-    PROCESS_PAUSE(); // yield to other processes
-
+    
     // LOG_INFO(
     //     "Sending (%u, %u) encrypted with AES 128 key, as nullnet BROADCAST\n",
     //     (unsigned int)count, (unsigned int)light);
@@ -105,6 +112,12 @@ PROCESS_THREAD(main_process, ev, data) {
     NETSTACK_RADIO.on();
     NETSTACK_NETWORK.output(NULL); // send as broadcast
     NETSTACK_RADIO.off();
+
+    t_end = RTIMER_NOW();
+    t_elapsed = t_end - t_start;
+  
+    LOG_INFO("TIMING: Time elapsed: %u RTIMER_SECOND = %u\n", t_elapsed, RTIMER_SECOND);
+    
 
     // print energest summary every iterations
     // to get a more accurate power consumption measurement

@@ -2,10 +2,20 @@
 import polars as pl
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
+from matplotlib.ticker import FuncFormatter
+
+# import seaborn as sns
 import os
 import sys
 import random
+
+plt.style.use('ggplot')
+
+# choose a great looking serif font
+plt.rcParams['font.family'] = 'sans-serif'
+
+figsize = (10, 7)
+
 
 #%%
 import matplotlib.style
@@ -15,6 +25,30 @@ print(matplotlib.style.available)
 # matplotlib.style.use('seaborn-whitegrid')
 # plt.style.use('fast')
 plt.style.use('ggplot')
+
+# create a gradient palette of colors starting from orange to red
+# from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import ListedColormap
+from matplotlib.colors import to_hex
+
+# Create a colormap
+cmap = plt.get_cmap('viridis')
+
+# Get the list of RGBA values from the colormap
+rgba_colors = cmap.colors
+
+# Convert the list of RGBA values to a list of hex codes
+hex_codes = [to_hex(c) for c in rgba_colors[48::48]]
+
+# aes_color = '#1f77b4'
+# hamming_color = '#ff7f0e'
+# base_color = '#2ca02c'
+
+aes_color = hex_codes[2]
+hamming_color = hex_codes[1]
+base_color = hex_codes[3]
+
+
 #%%
 
 df = pl.scan_csv("../data/memory-footprint.csv")
@@ -58,63 +92,48 @@ bytes_used_for_software_aes: int = bytes_flashed['with_software_aes'] - base
 bytes_used_for_hardware_aes: int = bytes_flashed['with_hardware_aes'] - base
 bytes_used_for_8_4_hamming: int = bytes_flashed['with_software_aes_and_8_4_hamming'] - bytes_flashed['with_software_aes']
 
-total = 0
+fig, ax = plt.subplots(figsize=(6, 8))
+fig.suptitle('Memory footprint of each AES implementation', fontsize=14)
 
-# for bytes_used in [
-#     bytes_flashed['base'],
-#     bytes_flashed['with_software_aes'] - bytes_flashed['base'],
-#     bytes_flashed['with_hardware_aes'] - bytes_flashed['base'], 
-#     bytes_flashed['with_software_aes_and_8_4_hamming'] - bytes_flashed['with_software_aes'],
-#     bytes_flashed['with_hardware_aes_and_8_4_hamming'] - bytes_flashed['with_hardware_aes']
-#     ]:
-#     xs = np.zeros(5)
-#     xs[0] = bytes_used
-#     plt.bar(bytes_flashed.keys())
+labels = ['Software AES', 'Hardware AES']
 
+# plt.barh(labels, [base, base], label='base')
+ax.bar(labels, [base, base], label='base', color=base_color)
+# ax.barh(labels, [bytes_used_for_software_aes, bytes_used_for_hardware_aes], left=[base, base], label='AES')
+ax.bar(labels, [bytes_used_for_software_aes, bytes_used_for_hardware_aes], bottom=[base, base], label='AES', color=aes_color)
 
-# set figure size
-plt.figure(figsize=(10, 5))
-plt.title('Memory footprint of the AES implementation')
+# ax.barh(labels, [bytes_used_for_8_4_hamming, bytes_used_for_8_4_hamming], left=[base + bytes_used_for_software_aes, base + bytes_used_for_hardware_aes], label='Hamming (8,4)')
+ax.bar(labels, [bytes_used_for_8_4_hamming, bytes_used_for_8_4_hamming], bottom=[base + bytes_used_for_software_aes, base + bytes_used_for_hardware_aes], label='Hamming (8,4)', color=hamming_color)
 
-labels = ['software AES', 'hardware AES']
+# ax.set_gca().xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x/1000:.0f} kB"))
+# ax.set_
 
-width = 0.8
+# ax.set_xticks(labels, color='black', fontsize=12, fontweight='bold')
+ax.set_xticklabels(labels, color='black', fontsize=12)
 
-print('width', width)
-plt.barh(labels, [base, base], label='base')
-plt.barh(labels, [bytes_used_for_software_aes, bytes_used_for_hardware_aes], left=[base, base], label='AES')
-
-
-
-plt.barh(labels, [bytes_used_for_8_4_hamming, bytes_used_for_8_4_hamming], left=[base + bytes_used_for_software_aes, base + bytes_used_for_hardware_aes], label='Hamming (8,4)')
-
-
-# plt.bar(bytes_flashed.keys(),s/ bytes_flashed.values(), align='center', alpha=1)
-# plt.bar(bytes_flashed.keys(), [0, by])
-
-# plt.ylim(0, MAX_FLASH_MEMORY + kB)
-plt.xlim(0, MAX_FLASH_MEMORY + kB)
-
-
+ax.set_ylim(0, MAX_FLASH_MEMORY + 2 * kB)
 # draw vertical line at 48 KB
-plt.axvline(x=MAX_FLASH_MEMORY, color='red', linestyle='--', label='max flash memory')
+ax.axhline(y=MAX_FLASH_MEMORY, color='red', linestyle='--', label='max flash memory', linewidth=2)
 
-# write the max flash memory value on the vertical line
-plt.text(MAX_FLASH_MEMORY - kB * 3, 0, '48 kB', color='red', fontsize=12)
 
-plt.xlabel('bytes flashed')
+# write the max flash memory value on the vertical line]
+# ax.text(0, MAX_FLASH_MEMORY - kB * 3, '48 kB', color='red', fontsize=12)
 
-# plt.xticks(rotation=45, fontsize=10, fontweight='bold')
-xticks = [x * kB for x in [0, 10, 20, 30, 40, 50]]
-plt.xticks(xticks, [f'{int(x/kB)} kB' for x in xticks])
-# plt.legend(loc='upper left')
-# plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), fancybox=True, shadow=True, ncol=5)
-# plt.legend(fancybox=False, shadow=True, ncol=5)
-plt.legend()
-plt.tight_layout()
-plt.savefig('../charts/horizontal_bar_chart_of_memory_usage.png', dpi=300)
-plt.savefig('../charts/horizontal_bar_chart_of_memory_usage.pdf', format='pdf')
-plt.show()
+twin_ax = ax.twinx()
+twin_ax.set_ylim(ax.get_ylim())
+twin_ax.set_yticks([MAX_FLASH_MEMORY])
+twin_ax.set_yticklabels(['48 kB'], color='red', fontsize=12)
+
+yticks = [x * kB for x in [0, 10, 20, 30, 40, 50]]
+ax.set_yticks(yticks, [f'{int(x/kB)} kB' for x in yticks],  color='black')
+
+ax.legend(fancybox=False, shadow=False, ncol=5, loc='upper center', bbox_to_anchor=(0.5, -0.05))
+fig.tight_layout()
+
+fig.savefig('../charts/memory-footprint.png', dpi=300, bbox_inches='tight')
+fig.savefig('../charts/memory-footprint.pdf', bbox_inches='tight', format='pdf')
+
+fig.show()
 
 #%%
 

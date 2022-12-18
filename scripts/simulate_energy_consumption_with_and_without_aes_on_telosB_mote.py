@@ -3,11 +3,6 @@ import random
 from pprint import pp
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-import functools as ft
-import itertools as it
-import time
-import operator as op
-
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
@@ -19,72 +14,68 @@ from tqdm import tqdm
 NUM_PAYLOADS = 10**3
 NUM_PAYLOADS_TO_TRY_BEFORE_GIVING_UP = NUM_PAYLOADS * 10 # if the number of received packets exceeds this number, the simulation for the current configuration is aborted
 PAYLOAD_SIZE = 128  # bits
-AES_ENCRYPTION = True
-HAMMING_8_4_ENCODING = True
+# AES_ENCRYPTION = True
+# HAMMING_8_4_ENCODING = True
 
 @dataclass
 class Configuration:
-    energy: float # mAh
+    energy: float # mJ
     time: float # seconds
     payload_size: int # bits
     aes: bool # True if {soft,hard}ware AES is used
     hamming: bool # True if Hamming (8,4) encoding is used
 
     def __str__(self) -> str:
-        return f'{self.energy} mAh, {self.time} s, {self.payload_size} bits, AES: {self.aes}, Hamming: {self.hamming}'
-
-
-
-# see google sheets for the values
-# cost is for the transmission of a single 128 bit message
-# for hammming the size is doubled
-cost = {
-    'base': {
-        'energy': 0.0000876347975, # mAh
-        'time': 0.0, # seconds
-        'payload_size': PAYLOAD_SIZE,
-        'aes': False,
-        'hamming': False,
-
-    },
-    'with_software_aes': {
-        'energy': 0.00008786787932, # mAh
-        'time': 0.0, # seconds
-        'payload_size': PAYLOAD_SIZE,
-        'aes': True,
-        'hamming': False,
-    },
-    'with_hardware_aes': {
-        'energy': 0.0000889883601294623, # mAh
-        'time': 0.0,    # seconds
-        'payload_size': PAYLOAD_SIZE,
-        'aes': True,
-        'hamming': False,
-    },
-    'with_software_aes_and_8_4_hamming': {
-        'energy': 0.0000911022232055664, # mAh
-        'time': 0.0, # seconds
-        'payload_size': PAYLOAD_SIZE * 2,
-        'aes': True,
-        'hamming': True,
-    },
-    'with_hardware_aes_and_8_4_hamming': {
-        'energy': 0.0000921822646247016, # mAh
-        'time': 0.0,    # seconds
-        'payload_size': PAYLOAD_SIZE * 2,
-        'aes': True,
-        'hamming': True,
-    },
-}
+        return f'{self.energy} mJ, {self.time} s, {self.payload_size} bits, AES: {self.aes}, Hamming: {self.hamming}'
 
 configurations: dict[str, Configuration] = {
-    name: Configuration(**values)
-    for name, values in cost.items()
+    'base': Configuration(
+        energy=0.942507, # mJ
+        time=0.001312255859, # seconds
+        payload_size=PAYLOAD_SIZE,
+        aes=False,
+        hamming=False,
+    ),
+    'with_software_aes': Configuration(
+        energy=0.960341, # mJ
+        time=0.004791259766, # seconds
+        payload_size=PAYLOAD_SIZE,
+        aes=True,
+        hamming=False,
+    ),
+    'with_hardware_aes': Configuration(
+        energy=0.945887, # mJ
+        time=0.001739501953,    # seconds
+        payload_size=PAYLOAD_SIZE,
+        aes=True,
+        hamming=False,
+    ),
+    'with_software_aes_and_8_4_hamming': Configuration(
+        energy=0.994701, # mJ
+        time=0.005065917969, # seconds
+        payload_size=PAYLOAD_SIZE * 2,
+        aes=True,
+        hamming=True,
+    ),
+    'with_hardware_aes_and_8_4_hamming': Configuration(
+        energy=0.979921, # mJ
+        time=0.002014160156,    # seconds
+        payload_size=PAYLOAD_SIZE * 2,
+        aes=True,
+        hamming=True,
+    ),
 }
 
 pp(configurations)
 
 #%%
+
+
+# trait NoiseModel {
+#     fn apply_noise(&self, payload: &[u8]) -> Vec<u8>;
+#     fn get_name(&self) -> String;
+# }
+
 
 class NoiseModel(ABC):
     @abstractmethod
@@ -96,7 +87,11 @@ class NoiseModel(ABC):
         pass
 
 
+
 class BinarySymmetricChannel(NoiseModel):
+    """
+    Binary Symmetric Channel (BSC) with probability p of bit flip.
+    """
     def __init__(self, p: float):
         assert 0 <= p <= 1, 'p must be between 0 and 1, but is {}'.format(p)
         self.p = p
@@ -105,7 +100,8 @@ class BinarySymmetricChannel(NoiseModel):
         length = len(payload)
         assert length > 0, 'payload must not be empty, but is {}'.format(payload)
 
-        noise = [1 if random.random() < self.p else 0 for _ in range(length)]
+        noise = [1 if random.random() < self.p else 0 for _ in range(length)] # [1,0,1,1,0,0,0,1,1,0]
+
         return [a ^ b for a, b in zip(payload, noise)]
 
     def get_name(self) -> str:
@@ -127,11 +123,12 @@ class GilbertElliotChannel(NoiseModel):
 
         noisy_payload: list[int] = []
         for bit in payload:
+            random_number: float = random.random()
             if self.state_is_good:
-                if random.random() < self.p:
+                if random_number < self.p:
                     self.state_is_good = False
             else:
-                if random.random() < self.r:
+                if random_number < self.r:
                     self.state_is_good = True
 
             noisy_payload.append(bit ^ 1 if not self.state_is_good else bit)
@@ -145,16 +142,18 @@ class GilbertElliotChannel(NoiseModel):
 
 
 noise_models: list[NoiseModel] =  [
-    BinarySymmetricChannel(0.1),
-    BinarySymmetricChannel(0.01),
-    BinarySymmetricChannel(0.001),
-    BinarySymmetricChannel(0.0001),
-    BinarySymmetricChannel(0.00001),
-
-    # GilbertElliotChannel(0.1, 0.5, True),  
-    GilbertElliotChannel(0.001, 0.1, True),
-    GilbertElliotChannel(0.001, 0.3, True),
-    GilbertElliotChannel(0.0001, 0.1, True),
+    # BinarySymmetricChannel(0.1), # 10% bit error rate
+    BinarySymmetricChannel(0.01), # 1% bit error rate
+    # BinarySymmetricChannel(0.001), # 0.1% bit error rate
+    BinarySymmetricChannel(0.0001), 
+    # BinarySymmetricChannel(0.00001),
+    
+    # p, r, initial_state_is_good
+    # GilbertElliotChannel(p=0.01, r=0.001, initial_state_is_good=True),
+    GilbertElliotChannel(p=0.01, r=0.5, initial_state_is_good=True),
+    GilbertElliotChannel(p=0.001, r=0.1, initial_state_is_good=True),
+    # GilbertElliotChannel(0.001, 0.3, True),
+    # GilbertElliotChannel(0.0001, 0.1, True),
 ] 
 
 #%%
@@ -232,6 +231,14 @@ ordering_schemes: list[OrderingScheme] = [
     NoOrdering(),
     OctetInterleaving(),
 ]
+
+
+ns = np.arange(0, 128, 1)
+print(ns)
+octet = OctetInterleaving()
+print(octet.order(ns))
+print(octet.reorder(octet.order(ns)))
+
 
 
 
@@ -365,16 +372,95 @@ for simulation_result in simulation_results:
 
 #%%
 
-for simulation_result in simulation_results:
-    if simulation_result.concede:
-        print(f'{simulation_result.name} conceded')
-        continue
+# for simulation_result in simulation_results:
+#     if simulation_result.concede:
+#         print(f'{simulation_result.name} conceded')
+#         continue
 
-    plt.plot(np.arange(1, NUM_PAYLOADS + 1), simulation_result.total_cumulative_energy_over_payloads, label=simulation_result.name)
+#     plt.plot(np.arange(1, NUM_PAYLOADS + 1), simulation_result.total_cumulative_energy_over_payloads, label=simulation_result.name)
 
-plt.xlabel('number of payloads received')
-plt.ylabel('cumulative energy used')
-plt.legend()
-plt.grid()
+# plt.xlabel('number of payloads received')
+# plt.ylabel('cumulative energy used')
+# plt.legend()
+# plt.grid()
+# plt.show()
+
+#%%
+
+# create a pareto front for the energy vs time tradeoff
+fig, axs = plt.subplots(2, 2, figsize=(10, 10))
+
+
+# group by the noise model
+groups = {
+    noise_model.get_name(): list(filter(lambda x: x.noise_model == noise_model, simulation_results))
+    for noise_model in noise_models
+}
+
+
+min_time = min([min([simulation_result.total_time for simulation_result in group]) for group in groups.values()])
+max_time = max([max([simulation_result.total_time for simulation_result in group]) for group in groups.values()])
+min_energy = min([min([simulation_result.total_energy for simulation_result in group]) for group in groups.values()])
+max_energy = max([max([simulation_result.total_energy for simulation_result in group]) for group in groups.values()])
+
+time_surplus = (max_time - min_time) * 0.1
+energy_surplus = (max_energy - min_energy) * 0.1
+
+group_names = list(groups.items())
+
+
+configuration_labels = []
+
+for axis, (noise_model_name, group) in zip(axs.flatten(), groups.items()):
+    axis.set_title(noise_model_name)
+    axis.set_xlabel('Time (s)')
+    axis.set_ylabel('Energy (mJ)')
+    axis.set_xlim(min_time - time_surplus, max_time + time_surplus)
+    axis.set_ylim(min_energy - energy_surplus, max_energy + energy_surplus)
+
+
+    for simulation_result in group:
+        if simulation_result.concede:
+            continue
+
+        axis.scatter(simulation_result.total_time, simulation_result.total_energy, label=simulation_result.name)
+        configuration_labels.append(simulation_result.name)
+
+    # axis.legend(fancybox=False, framealpha=1, shadow=True, borderpad=1)
+    
+fig.legend(configuration_labels, loc='lower center', ncol=4, fancybox=False, framealpha=1, shadow=True, borderpad=1)
+
+
+# @dataclass
+# class SimulationResult:
+#     name: str
+#     total_energy: float
+#     total_cumulative_energy_over_payloads: list[float]
+#     total_time: float
+#     total_cumulative_time_over_payloads: list[float]
+#     payload_size: int
+#     num_payloads: int
+#     aes_encryption: bool
+#     hamming_8_4_encoding: bool
+#     noise_model: NoiseModel
+#     ordering_scheme: OrderingScheme
+#     concede: bool = False
+
+
+# filter(lambda x: x., simulation_results)
+
+# fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+
+# for simulation_result in simulation_results:
+#     if simulation_result.concede:
+#         continue
+
+#     ax.scatter(simulation_result.total_time, simulation_result.total_energy, label=simulation_result.name)
+
+#     ax.set_xlabel('time')
+#     ax.set_ylabel('energy')
+#     ax.legend()
+#     ax.grid()
+
+plt.tight_layout()
 plt.show()
-

@@ -3,21 +3,26 @@ import polars as pl
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
-import seaborn as sns
-import os
-import sys
-import random
-import glob
 from pathlib import Path
 import matplotlib.font_manager
 
 
-plt.style.use('ggplot')
+# plt.style.use('ggplot')
 
 # choose a great looking serif font
 plt.rcParams['font.family'] = 'sans-serif'
 
 figsize = (10, 7)
+
+
+FIGSIZE: tuple[int,int] = (10, 7)
+
+AXIS_LABEL_FONT_SIZE = 18
+XAXIS_LABEL_FONT_SIZE = AXIS_LABEL_FONT_SIZE
+YAXIS_LABEL_FONT_SIZE = AXIS_LABEL_FONT_SIZE
+
+YTICKS_LABEL_FONT_SIZE = 14
+XTICKS_LABEL_FONT_SIZE = 14
 
 
 #%%
@@ -62,41 +67,35 @@ timing_values = (np.array([
     166,
 ]) + TICKS_TO_SAMPLE_4_LIGHT_MEASUREMENTS) / RTIMER_SECOND
 
-# # see our google sheet for the values
-# timing_values = [
-#     43 / RTIMER_SECOND, # seconds
-#     57 / RTIMER_SECOND, # seconds
-#     66 / RTIMER_SECOND, # seconds
-#     157 / RTIMER_SECOND, # seconds
-#     166 / RTIMER_SECOND, # seconds
-# ]
 
-# set figure size
-plt.figure(figsize=figsize)
+fix, ax = plt.subplots(figsize=FIGSIZE)
+
+ax.bar(labels, timing_values, color=hex_codes)
+
 title: str = 'Average time per payload generation and transmission'
-plt.title(title, fontsize=20, pad=10, fontweight='normal')
-plt.bar(labels, timing_values, color=hex_codes)
+# ax.set_title(title, fontsize=20, pad=10, fontweight='normal')
 
-plt.xlabel('configuration', color='black', fontsize=18)
+ax.set_xlabel('configuration', color='black', fontsize=XAXIS_LABEL_FONT_SIZE, labelpad=10)
+ax.set_xticklabels(labels, fontsize=XTICKS_LABEL_FONT_SIZE)
+# ax.tick_params(axis='x', which='major', colors='black', fontsize=XTICKS_LABEL_FONT_SIZE)
 
+ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x*1000:.3f}"))
+ax.set_yticks(timing_values, fontsize=YTICKS_LABEL_FONT_SIZE)
+ax.set_yticklabels([f'{x*1000:.3f}' for x in timing_values], fontsize=YTICKS_LABEL_FONT_SIZE)
+xmaxs = [0.05, 0.24, 0.42, 0.61, 0.8]
 
-# show the y-axis in milliseconds
-plt.ylabel('time (ms)', color='black', fontsize=18)
-# Convert the tick labels to milliseconds
-plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x*1000:.3f}"))
+for x, xmax in zip(ax.get_yticks(), xmaxs):
+    # draw a line at starting at the left y-axis, and ending at the start of its bar
+    # center_of_bar = x - (x - axis.get_ylim()[0]) / 2
+    ax.axhline(x, xmin=0, xmax=xmax, color='black', linewidth=0.8, alpha=0.75, linestyle='--')    
 
-# for each bar, show the value in the middle of bar of it in milliseconds
-# for i, v in enumerate(timing_values):
-#     half_up = v / 2
-#     plt.text(i, half_up, f"{v*1000:.3f} ms", ha='center', fontsize=12)
+twinx = ax.twinx()
+twinx.set_ylim(ax.get_ylim())
+twinx.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x*1000:.3f}"))
+twinx.set_ylabel('time (ms)', color='black', fontsize=YAXIS_LABEL_FONT_SIZE, labelpad=10)
 
-# Show each measurement as a tick on the y-axis
-plt.yticks(timing_values, fontsize=12)
-plt.xticks(fontsize=13)
-
-# Create a list of colors for the y-axis ticks
-plt.tick_params(axis='y', which='major', colors='black')
-plt.tick_params(axis='x', which='major', colors='black')
+twinx_xticks = np.arange(0, 8, 1)
+twinx.set_yticklabels([f'{x:.1f}' for x in twinx_xticks], fontsize=YTICKS_LABEL_FONT_SIZE)
 
 plt.tight_layout()
 plt.savefig('../charts/average-time-per-payload-generation-and-transmission.png', dpi=300, bbox_inches='tight')
@@ -114,25 +113,51 @@ timing_values_as_percentage_of_base_configuration = [
 
 print(timing_values_as_percentage_of_base_configuration)
 
-plt.figure(figsize=figsize)
-
+plt.figure(figsize=FIGSIZE)
 plt.bar(labels[1:], timing_values_as_percentage_of_base_configuration, color=hex_codes[1:5])
 
 title: str = 'Percentage of time compared to base configuration'
 
-plt.title(title, fontsize=20, pad=10, fontweight='normal')
+# plt.title(title, fontsize=20, pad=10, fontweight='normal')
 
-plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x:.2f} %"))
+# plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x:.2f} %"))
 
 
-ylabel: str = 'percentage of time'
-plt.ylabel(ylabel, color='black', fontsize=18)
-plt.xlabel('configuration', color='black', fontsize=18)
-plt.tick_params(axis='y', which='major', colors='black')
-plt.tick_params(axis='x', which='major', colors='black')
+ylabel: str = 'Percentage of time'
+# plt.ylabel(ylabel, color='black', fontsize=YAXIS_LABEL_FONT_SIZE, labelpad=10)
+plt.xlabel('Configuration', color='black', fontsize=XAXIS_LABEL_FONT_SIZE, labelpad=10)
 
-plt.yticks(timing_values_as_percentage_of_base_configuration, fontsize=12)
-plt.xticks(fontsize=13)
+# plt.tick_params(axis='y', which='major', colors='black')
+# plt.tick_params(axis='x', which='major', colors='black')
+
+plt.yticks(timing_values_as_percentage_of_base_configuration, fontsize=YTICKS_LABEL_FONT_SIZE)
+plt.xticks(fontsize=XTICKS_LABEL_FONT_SIZE)
+
+axis = plt.gca()
+
+# axis.yaxis.set_major_formatter('{x:.2f}%')
+axis.set_yticks(timing_values_as_percentage_of_base_configuration, fontsize=YTICKS_LABEL_FONT_SIZE)
+axis.set_yticklabels([f'{x:.2f}%' for x in timing_values_as_percentage_of_base_configuration], fontsize=YTICKS_LABEL_FONT_SIZE)
+
+xmaxs = [0.05, 0.29, 0.52, 0.76]
+
+for x, xmax in zip(axis.get_yticks(), xmaxs):
+    # draw a line at starting at the left y-axis, and ending at the start of its bar
+    # center_of_bar = x - (x - axis.get_ylim()[0]) / 2
+    axis.axhline(x, xmin=0, xmax=xmax, color='black', linewidth=0.8, alpha=0.75, linestyle='--')    
+    # axis.line
+
+
+twinx = axis.twinx()
+# twinx.yaxis.set_major_formatter('{x:.2f}')
+twinx.set_ylim(axis.get_ylim())
+
+# 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1.0
+xticks = np.arange(0, 140, 10)
+twinx.set_yticks(xticks)
+twinx.set_yticklabels([f'{x}%' for x in xticks], fontsize=YTICKS_LABEL_FONT_SIZE)
+
+twinx.set_ylabel(ylabel, color='black', fontsize=YAXIS_LABEL_FONT_SIZE, labelpad=15)
 
 
 
@@ -141,3 +166,4 @@ plt.tight_layout()
 plt.savefig('../charts/percentage-of-time-compared-to-base-configuration.png', dpi=300)
 plt.savefig('../charts/percentage-of-time-compared-to-base-configuration.pdf', format='pdf')
 plt.show()
+# %%

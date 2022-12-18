@@ -9,12 +9,19 @@ import os
 import sys
 import random
 
-plt.style.use('ggplot')
+# plt.style.use('ggplot')
 
 # choose a great looking serif font
 plt.rcParams['font.family'] = 'sans-serif'
 
-figsize = (10, 7)
+FIGSIZE: tuple[int,int] = (10, 7)
+
+AXIS_LABEL_FONT_SIZE = 18
+XAXIS_LABEL_FONT_SIZE = AXIS_LABEL_FONT_SIZE
+YAXIS_LABEL_FONT_SIZE = AXIS_LABEL_FONT_SIZE
+
+YTICKS_LABEL_FONT_SIZE = 14
+XTICKS_LABEL_FONT_SIZE = 14
 
 
 #%%
@@ -24,7 +31,7 @@ print(matplotlib.style.available)
 # matplotlib.style.use(random.choice(matplotlib.style.available))
 # matplotlib.style.use('seaborn-whitegrid')
 # plt.style.use('fast')
-plt.style.use('ggplot')
+# plt.style.use('ggplot')
 
 # create a gradient palette of colors starting from orange to red
 # from matplotlib.colors import LinearSegmentedColormap
@@ -47,6 +54,7 @@ hex_codes = [to_hex(c) for c in rgba_colors[48::48]]
 aes_color = hex_codes[2]
 hamming_color = hex_codes[1]
 base_color = hex_codes[3]
+free_color = hex_codes[0]
 
 
 #%%
@@ -92,42 +100,49 @@ bytes_used_for_software_aes: int = bytes_flashed['with_software_aes'] - base
 bytes_used_for_hardware_aes: int = bytes_flashed['with_hardware_aes'] - base
 bytes_used_for_8_4_hamming: int = bytes_flashed['with_software_aes_and_8_4_hamming'] - bytes_flashed['with_software_aes']
 
-fig, ax = plt.subplots(figsize=(6, 8))
-fig.suptitle('Memory footprint of each AES implementation', fontsize=14)
+fig, ax = plt.subplots(figsize=(12, 6))
+title = 'Memory footprint of each AES implementation'
+# fig.suptitle(title, fontsize=14)
 
 labels = ['Software AES', 'Hardware AES']
 
-# plt.barh(labels, [base, base], label='base')
-ax.bar(labels, [base, base], label='base', color=base_color)
-# ax.barh(labels, [bytes_used_for_software_aes, bytes_used_for_hardware_aes], left=[base, base], label='AES')
-ax.bar(labels, [bytes_used_for_software_aes, bytes_used_for_hardware_aes], bottom=[base, base], label='AES', color=aes_color)
+plt.barh(labels, [base, base], label='base', color=base_color)
+# ax.bar(labels, [base, base], label='Base', color=base_color)
+ax.barh(labels, [bytes_used_for_software_aes, bytes_used_for_hardware_aes], left=[base, base], label='AES', color=aes_color)
+# ax.bar(labels, [bytes_used_for_software_aes, bytes_used_for_hardware_aes], bottom=[base, base], label='AES', color=aes_color)
 
-# ax.barh(labels, [bytes_used_for_8_4_hamming, bytes_used_for_8_4_hamming], left=[base + bytes_used_for_software_aes, base + bytes_used_for_hardware_aes], label='Hamming (8,4)')
-ax.bar(labels, [bytes_used_for_8_4_hamming, bytes_used_for_8_4_hamming], bottom=[base + bytes_used_for_software_aes, base + bytes_used_for_hardware_aes], label='Hamming (8,4)', color=hamming_color)
+ax.barh(labels, [bytes_used_for_8_4_hamming, bytes_used_for_8_4_hamming], left=[base + bytes_used_for_software_aes, base + bytes_used_for_hardware_aes], label='Hamming (8,4)', color=hamming_color)
+# ax.bar(labels, [bytes_used_for_8_4_hamming, bytes_used_for_8_4_hamming], bottom=[base + bytes_used_for_software_aes, base + bytes_used_for_hardware_aes], label='Hamming (8,4)', color=hamming_color)
 
 # ax.set_gca().xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x/1000:.0f} kB"))
 # ax.set_
 
 # ax.set_xticks(labels, color='black', fontsize=12, fontweight='bold')
-ax.set_xticklabels(labels, color='black', fontsize=12)
+# ax.set_xticklabels(labels, color='black', fontsize=12)
 
-ax.set_ylim(0, MAX_FLASH_MEMORY + 2 * kB)
+ax.set_xlim(0, MAX_FLASH_MEMORY + 2 * kB)
 # draw vertical line at 48 KB
-ax.axhline(y=MAX_FLASH_MEMORY, color='red', linestyle='--', label='max flash memory', linewidth=2)
+ax.axvline(x=MAX_FLASH_MEMORY, color='red', linestyle='--', label='max flash memory', linewidth=2)
+ax.text(MAX_FLASH_MEMORY - kB * 3, 0.5, '48 kB', color='red', fontsize=12)
 
+
+ax.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x/1000:.0f} kB"))
+ax.set_yticklabels(labels, color='black', fontsize=YTICKS_LABEL_FONT_SIZE)
+ax.set_xticklabels([f'{int(x/1000)} kB' for x in ax.get_xticks()], color='black', fontsize=XTICKS_LABEL_FONT_SIZE)
 
 # write the max flash memory value on the vertical line]
 # ax.text(0, MAX_FLASH_MEMORY - kB * 3, '48 kB', color='red', fontsize=12)
 
-twin_ax = ax.twinx()
-twin_ax.set_ylim(ax.get_ylim())
-twin_ax.set_yticks([MAX_FLASH_MEMORY])
-twin_ax.set_yticklabels(['48 kB'], color='red', fontsize=12)
+# twin_ax = ax.twinx()
+# twin_ax.set_ylim(ax.get_ylim())
+# twin_ax.set_yticks([MAX_FLASH_MEMORY])
+# twin_ax.set_yticklabels(['48 kB'], color='red', fontsize=12)
 
-yticks = [x * kB for x in [0, 10, 20, 30, 40, 50]]
-ax.set_yticks(yticks, [f'{int(x/kB)} kB' for x in yticks],  color='black')
+# yticks = [x * kB for x in [0, 10, 20, 30, 40, 50]]
+# ax.set_yticks(yticks, [f'{int(x/kB)} kB' for x in yticks],  color='black')
 
-ax.legend(fancybox=False, shadow=False, ncol=5, loc='upper center', bbox_to_anchor=(0.5, -0.05))
+ax.legend(fancybox=False, shadow=False, ncol=5, loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=16)
+# ax.legend()
 fig.tight_layout()
 
 fig.savefig('../charts/memory-footprint.png', dpi=300, bbox_inches='tight')
@@ -137,11 +152,11 @@ fig.show()
 
 #%%
 
-fig, (ax0, ax1) = plt.subplots(1, 2, sharex=False, figsize=(10, 5))
+fig, (ax0, ax1) = plt.subplots(1, 2, sharex=False, figsize=(10, 6))
 
-labels = ['base', 'software AES', '8/4 Hamming', 'free']
+labels = ['Base', 'Software AES', '8/4 Hamming', 'Free']
 
-explode = (0, 0.3, 0.1, 0)  # only "explode" the 2nd slice (i.e. '{software, hardware} AES' and '8/4 Hamming')
+explode = (0, 0.3, 0.5, 0)  # only "explode" the 2nd slice (i.e. '{software, hardware} AES' and '8/4 Hamming')
 
 sizes = [
     bytes_flashed['base'],
@@ -152,6 +167,7 @@ sizes = [
 
 
 shadow = False
+autopct = '%1.2f%%'
 
 # complementary pastel colors
 ptgreen = '#b3e2cd'
@@ -161,13 +177,16 @@ ptpurple = '#cbd5e8'
 ptorange = '#f4cae4'
 ptbrown = '#e6f5c9'
 ptgray = '#f5f5f5'
+gray = '#808080'
 
-ax0.pie(sizes, explode=explode, autopct='%1.1f%%', shadow=shadow, startangle=90)
+colors = [base_color, aes_color, hamming_color, ptpurple]
+
+ax0.pie(sizes, explode=explode, colors=colors, autopct=autopct, shadow=shadow, startangle=90)
 ax0.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 ax0.legend(labels)
 
 
-labels = ['base', 'hardware AES', '8/4 Hamming', 'free']
+labels = ['Base', 'Hardware AES', '8/4 Hamming', 'Free']
 
 sizes = [
     bytes_flashed['base'],
@@ -176,11 +195,12 @@ sizes = [
     MAX_FLASH_MEMORY - bytes_flashed['with_hardware_aes_and_8_4_hamming']
 ]
 
-ax1.pie(sizes, explode=explode,  autopct='%1.1f%%', shadow=shadow, startangle=90)
+ax1.pie(sizes, explode=explode, colors=colors, autopct=autopct, shadow=shadow, startangle=90)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 ax1.legend(labels)
 
-fig.suptitle('Flash Memory Usage (48 kB)', fontsize=16)
+title = 'Relative Flash Memory Usage (48 kB)'
+# fig.suptitle(title, fontsize=16)
 
 plt.tight_layout()
 plt.savefig('../charts/pie_chart_of_memory_usage.png', dpi=300)
